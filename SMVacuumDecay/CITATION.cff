@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software in your research, please cite it as below."
+authors:
+  - family-names: "Goyal"
+    given-names: "Naman"
+title: "SMVacuumDecay"
+version: 1.0.0
+date-released: 2026-06-26
+url: "https://github.com/YourUsername/SMVacuumDecay"
+description: "A computational framework for studying electroweak vacuum stability in the Standard Model."
