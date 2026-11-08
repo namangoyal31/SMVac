@@ -64,6 +64,13 @@ __pycache__/
 *.pyc
 # Build tree and transient outputs of the new layout
 build/
+build_*/
 validation/results_*.log
 build_configure.log
 *.tmp
+# Fresh (uncompressed) scan outputs: the committed versions are results/*.csv.gz
+results/controlled_cw1.csv
+results/controlled_tree.csv
+results/exploratory_cw1.csv
+# Local tool configuration
+.claude/

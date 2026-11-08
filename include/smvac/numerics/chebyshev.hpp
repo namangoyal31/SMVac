@@ -69,6 +69,7 @@ public:
         return mx > 0 ? tail / mx : 0.0;
     }
     int degree() const { return static_cast<int>(c_.size()) - 1; }
+    const std::vector<double>& coefficients() const { return c_; }
     double a() const { return a_; }
     double b() const { return b_; }
 

@@ -27,4 +27,7 @@ printf "125.1 173.1\n5 105\n" | ./legacy_driver > out.csv
 python -m audit.validate_port out.csv
 ```
 
-Outputs are written to `audit/results/`.
+Outputs are written to `audit/results/`. **These are Stage A/B review artefacts.** Unless a script states
+otherwise, they use the *legacy* physics inputs: legacy matching, the legacy lambda_eff with its Z-coupling bug, and,
+where marked, the phi^6 term. This isolates method effects. They are not the final results of the
+repository; for those, see `results/`, `figures/` and `docs/VALIDATION_REPORT.md`.

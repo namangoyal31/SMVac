@@ -45,6 +45,7 @@ public:
     double x_hi() const { return x_hi_; }
     int degree() const { return s_.degree(); }
     double tail_ratio() const { return s_.tail_ratio(); }
+    const numerics::ChebyshevSeries& series() const { return s_; }
 
 private:
     double x_lo_, x_hi_, lam_lo_, lam_hi_;

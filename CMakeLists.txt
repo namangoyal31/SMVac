@@ -41,3 +41,7 @@ if(BUILD_TESTING)
     add_test(NAME ${t} COMMAND ${t})
   endforeach()
 endif()
+
+# Validation program (not built by default): cmake --build build --target precision_check
+add_executable(precision_check EXCLUDE_FROM_ALL validation/precision_check.cpp)
+target_link_libraries(precision_check PRIVATE smvac)

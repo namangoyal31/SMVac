@@ -1,0 +1,26 @@
+== parabola q=2.5: S_FL=210551.560557
+   L= 10.0 N= 256: S=225400.864806917 derrick=5.6e-15 dilatation=1.3e-14
+   L= 12.5 N= 320: S=225400.864806917 derrick=2.0e-14 dilatation=8.4e-15
+   L= 15.0 N= 384: S=225400.864806917 derrick=2.2e-14 dilatation=-7.8e-14
+   L= 20.0 N= 512: S=225400.864806917 derrick=-5.2e-15 dilatation=1.2e-14
+   L= 25.0 N= 640: S=225400.864806917 derrick=-6.3e-14 dilatation=1.8e-13
+   off-node ODE residual: max|r|/max|f| = 1.10e-08, rms = 8.94e-11
+   Simpson (20001 pts) action: 225400.864806926  vs Clenshaw-Curtis 225400.864806917  rel diff 4.0e-14
+== SM cw1 (125.15,173.34): S_FL=1854.69067824
+   L= 10.0 N= 256: S=1856.01513783425 derrick=2.8e-13 dilatation=-1.1e-12
+   L= 12.5 N= 320: S=1856.01513783425 derrick=3.0e-13 dilatation=-1.0e-12
+   L= 15.0 N= 384: S=1856.01513783424 derrick=2.7e-13 dilatation=-1.1e-12
+   L= 20.0 N= 512: S=1856.01513783423 derrick=2.4e-13 dilatation=-1.1e-12
+   L= 25.0 N= 640: S=1856.01513783425 derrick=2.5e-13 dilatation=-1.1e-12
+   off-node ODE residual: max|r|/max|f| = 2.81e-08, rms = 2.66e-10
+   Simpson (20001 pts) action: 1856.01513783425  vs Clenshaw-Curtis 1856.01513783424  rel diff 4.0e-15
+   ulp perturbation of lambda coefficients (10 runs): spread (max-min)/S = 3.6e-15
+== SM cw1 (125.15,171.15): S_FL=135703.086854
+   L= 10.0 N= 256: S=141392.67123322 derrick=-3.2e-11 dilatation=1.3e-10
+   L= 12.5 N= 320: S=141392.671233221 derrick=-3.2e-11 dilatation=1.3e-10
+   L= 15.0 N= 384: S=141392.671233219 derrick=-3.2e-11 dilatation=1.3e-10
+   L= 20.0 N= 512: S=141392.671233219 derrick=-3.2e-11 dilatation=1.3e-10
+   L= 25.0 N= 640: S=141392.67123322 derrick=-3.2e-11 dilatation=1.3e-10
+   off-node ODE residual: max|r|/max|f| = 2.09e-08, rms = 1.58e-10
+   Simpson (20001 pts) action: 141392.671233001  vs Clenshaw-Curtis 141392.671233219  rel diff 1.5e-12
+   ulp perturbation of lambda coefficients (10 runs): spread (max-min)/S = 2.7e-13

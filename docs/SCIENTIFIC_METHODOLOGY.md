@@ -12,6 +12,18 @@ Statements marked **[derived]** follow from a derivation given here.
 Companion documents: `docs/REPOSITORY_AUDIT.md` (inventory, provenance, testing) and
 `docs/NUMERICAL_METHODS_REVIEW.md` (algorithms, convergence, proposed replacements).
 
+> **Status after Stage C.** All defects F2–F8 are corrected or documented in the new implementation
+> (`src/`, `include/smvac/`), and the unsound `S_exact` (F1) is retired to `legacy/`. The numerical reference
+> and its validation are described in `docs/NUMERICAL_METHOD_COMPARISON.md` and `docs/VALIDATION_REPORT.md`.
+> The derivations of §6 (lower bound, variational estimate, curvature correction) are implemented in
+> `src/analytic.cpp` and tested in `tests/test_analytic.cpp`. §6.6a was added in Stage D. It covers the
+> near-critical failure of the variational estimates, the exact finiteness criterion, and the two-parameter
+> estimate (`python/smvac/reference/analytic.py`), and it is checked in `validation/verify_derivations.py`.
+>
+> **Paths.** File names in §0–§5 refer to the audited revision `a7c070a`. In the current tree:
+> `apps/solver_numerical.cpp`, `SMVacuumDecay/`, `data/`, `figures/` and `scripts/` of that revision are in
+> `legacy/`; its working notes from `docs/` are in `docs/archive/`.
+
 ---
 
 ## 0. Summary of findings
@@ -294,6 +306,75 @@ Conclusions:
   $\lambda_{\rm eff}$ is still decreasing at $M_{\rm Pl}$, the cut-off of the running. There the
   result is dominated by the Planck-scale treatment (couplings frozen, plus $\phi^6$), not by SM
   RG effects.
+
+### 6.6a Why the variational estimates fail near the stability boundary [derived, verified]
+
+**A finiteness criterion for any fixed-shape estimate.** Take a trial $\phi=h\,g(r/R)$ of fixed shape $g$.
+Maximising $S=TR^2+VR^4$ over the size $R$ gives $T^2/(4|V|)$, with
+$V=\tfrac{\pi^2}{2}h^4R^4\int\lambda(\ln h+\ln g)\,g^4s^3ds$. The estimate is finite only if $V<0$ for some $h$.
+For a quadratic minimum, $\lambda=\lambda''\,[\tfrac12(x-x_{\min})^2-q]$ with $q=|\lambda_{\min}|/\lambda''$, write
+$\langle\cdot\rangle$ for the average over the weight $g^4s^3ds$. Then
+$V\propto\tfrac12\langle(\ln h+\ln g-x_{\min})^2\rangle-q$, which is minimised at $\ln h=x_{\min}-\langle\ln g\rangle$. Hence
+$$\min_h V<0\iff q>q_c[g]\equiv\tfrac12\,\mathrm{Var}_g(\ln g).$$
+**Every fixed-shape estimate becomes infinite at a finite $q_c$.** That threshold depends only on the spread of the
+field values the shape samples.
+
+* **FL shape ($S_{\rm CGM}$).** The weight is $6w(1-w)\,dw$ with $\langle\ln w\rangle=-\tfrac56$ and
+  $\tfrac12\mathrm{Var}=\tfrac{13}{72}\approx0.181$. Exactly,
+  $$S_{\rm CGM}=\frac{8\pi^2}{3\lambda''\,(q-13/72)}.$$
+  $S_{\rm curv}$ is the same expression for quadratic $\lambda$. In the SM the cubic terms move the two poles
+  slightly apart.
+* **Two-parameter family ($S_{\rm CGM2}$, $w_n=(1+s^{2n})^{-1/n}$).** $q_c(n)$ decreases monotonically: $13/72$ at
+  $n=1$, $1/8$ at $n=2$, and $3/32=0.09375$ as $n\to\infty$. This is verified numerically to $10^{-9}$
+  (`validation/results/derivation_checks.txt` §6). The limit member $w=\min(1,s^{-2})$ has a flat core joined to
+  the FL tail $h(R/r)^2$. It puts half its weight at $\ln w=0$ and half in the tail, where $\ln w$ is distributed
+  as $-{\rm Exp}(2)$, so $\mathrm{Var}=\tfrac3{16}$. In closed form, $S_\infty=4\pi^2/[\lambda''(q-3/32)]$ at
+  $\ln h=x_{\min}+\tfrac14$ (checks §7). **So $S_{\rm CGM2}=\infty$ for $q\le3/32$: the shape parameter moves
+  the pole from $13/72$ to $3/32$ but does not remove it.**
+* **The exact bounce has no such threshold.** Derrick's identity gives $V=-T/2<0$. The dilatation identity
+  $\int\lambda' f^4d\tau=0$ gives $\langle\ln\phi\rangle_b=x_{\min}$ exactly for quadratic $\lambda$, with
+  $\phi^4r^3dr=f^4d\tau$. Together,
+  $$S_b=\tfrac{\pi^2}{2}\,\lambda''\,M\,\big(q-\tfrac12\mathrm{Var}_b(\ln\phi)\big),\qquad M=\int f^4d\tau,$$
+  so the bounce always has $\tfrac12\mathrm{Var}_b<q$. As $q\to0$ it must concentrate its $\phi^4r^3$ weight at
+  one field value: it develops a flat core and a thin wall. Numerically, $\tfrac12\mathrm{Var}_b/q=0.061$, $0.20$,
+  $0.32$, $0.42$, $0.51$ at $q=2.5$, $0.5$, $0.2$, $0.1$, $0.05$, and $\langle\ln\phi\rangle_b=x_{\min}$ to
+  quadrature accuracy (checks §8).
+* **Why the trial families cannot follow.** Every member of both families has the tail $h(R/r)^2$, whose amplitude
+  is fixed by the core value $h$. That tail always carries a finite fraction of the weight (one half as
+  $n\to\infty$) at field values below the window where $\lambda<0$. The true near-critical bounce drops across
+  its wall to a tail of much smaller amplitude (`figures/variational_failure.png`). Representing this requires
+  decoupling the tail amplitude from the core, so at least a third shape parameter. Such a family has not been
+  constructed here.
+
+**Consequences, quantified on the parabolic model** (`validation/results/near_critical_summary.json`; the
+numerical reference is M4 with adaptive $N$, cross-checked by M2 shooting to $1.1\times10^{-11}$):
+
+| quantity | $S_{\rm FL}$ (lower bound) | $S_{\rm CGM}$ (FL trial) | $S_{\rm CGM2}$ (two-parameter trial) |
+|---|---|---|---|
+| thick-wall error, $q\to\infty$ | $\tfrac{13}{72}q^{-1}$ (derived; ratio 0.99992 at $q=1000$) | $0.0462\,q^{-2}$ (fit, $q\ge30$) | $0.0103\,q^{-2}$ (fit; $0.22\times$ the $S_{\rm CGM}$ error) |
+| $q$ at which the error reaches 1% / 10% / 100% | 17.8 / 1.55 / never (capped at 100%) | 2.06 / 0.64 / 0.26 | 0.93 / 0.30 / 0.13 |
+| finite for | all $q>0$ | $q>13/72$ | $q>3/32$ |
+| error at $q=0.5$ / $0.2$ / $0.1$ | 25% / 46% / 64% | +17% / +455% / $\infty$ | +3.4% / +26% / +712% |
+
+* **Crossover.** $S_{\rm CGM}$ becomes less accurate than $S_{\rm FL}$ below $q^*=0.39$. $S_{\rm CGM2}$ does so
+  below $q^*=0.16$. With the symmetric measure $|\ln(S_{\rm est}/S)|$ the crossovers are 0.31 and 0.12.
+* **The relative error of $S_{\rm FL}$ is capped at 100%** by construction ($0<S_{\rm FL}\le S$). The errors of
+  the upper estimates are unbounded. This is why the worst-case error of $S_{\rm CGM}$ in the scans exceeds that
+  of $S_{\rm FL}$.
+* **The optimal shape** moves away from FL as the wall thins: $n_{\rm opt}-1\approx0.61/q$ for thick walls, and
+  $n_{\rm opt}=2.2$, $4.5$, $22$ at $q=0.5$, $0.2$, $0.1$.
+* **No closed-form asymptotics cover $0.05\lesssim q\lesssim1$.** The thick-wall expansion fails there, and so
+  does the leading-order Coleman thin-wall action. For this model the thin-wall action is
+  $S_{\rm TW}=27\pi^2\sigma^4/(2\varepsilon^3)=0.0812/(\lambda''q^3)$, with $\sigma=\sqrt{\lambda''}\phi_-^3/18$
+  and $\varepsilon=q\lambda''\phi_-^4/4$. The ratio $S/S_{\rm TW}$ falls from 15.7 at $q=0.15$ to 4.2 at $q=0.05$.
+  The local exponent $d\ln S/d\ln q$ steepens from $-1.6$ to $-1.95$, against $-3$ asymptotically, and $S_{\rm TW}$
+  lies even below the rigorous bound $S_{\rm FL}$ for $q>0.056$. The massless false vacuum gives the wall a
+  power-law tail, which slows the approach to the thin-wall limit.
+
+The same structure is found along the SM lines (`docs/VALIDATION_REPORT.md` §5.3). There $q$ is proportional to
+$\delta=M_t-M_t^{\rm crit}$: $q/\delta=121$, $141$ and $140$ GeV$^{-1}$ for (`cw1`, 120), (`cw1`, 125.15) and
+(`tree`, 125.15). Away from the Planck plateau, $S/S_{\rm FL}-1$ follows the parabolic-model curve to 2–3% for all
+$q\in[0.17,600]$.
 
 ### 6.7 The hidden $\phi^6$ operator (F2)
 

@@ -19,7 +19,7 @@ namespace smvac {
 struct BounceOptions {
     int nodes = 256;          // initial number of Chebyshev collocation nodes
     int nodes_check = 384;    // second resolution used for the self-convergence estimate (scaled with nodes)
-    int max_nodes = 2048;     // resolution is doubled until the identities hold to identity_tol (thin walls)
+    int max_nodes = 1024;     // resolution is doubled (pairs 256/384, 512/768) until the identities hold
     double identity_tol = 1e-9;
     // Reduced-accuracy tier: if identity_tol cannot be met (e.g. the bounce crosses the frozen-coupling kink at
     // M_Pl, where spectral convergence becomes algebraic), accept identities below this value and flag the result.

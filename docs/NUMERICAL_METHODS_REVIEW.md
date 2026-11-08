@@ -6,6 +6,10 @@
 `audit/README.md`. Physics issues are discussed in `docs/SCIENTIFIC_METHODOLOGY.md`. This
 document separates *numerical* error from *method/physics* error.
 
+> **Paths** refer to the reviewed revision `a7c070a`. The original code, data and figures are now in `legacy/`,
+> and its working notes from `docs/` are in `docs/archive/`. The replacement methods chosen afterwards are
+> documented in `docs/NUMERICAL_METHOD_COMPARISON.md` and validated in `docs/VALIDATION_REPORT.md`.
+
 ---
 
 ## 1. Inventory of algorithms

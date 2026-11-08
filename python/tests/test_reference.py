@@ -58,6 +58,25 @@ class TestAnalytic(unittest.TestCase):
         self.assertAlmostEqual(a.S_curv / closed, 1.0, places=13)
         self.assertAlmostEqual(a.S_CGM / closed, 1.0, places=11)
 
+    def test_two_parameter_family(self):
+        """n = 1 member = S_CGM; n -> infinity member = 4 pi^2/(l2 (q - 3/32)); finite iff q > 3/32 (model)."""
+        l2 = 5e-5
+        pot = P.parabola_model(-0.5 * l2, l2, 39.0)                    # q = 0.5
+        a = A.estimates(pot, (15, 65))
+        T, V = A.cgm2_trial(pot, a.lnh_CGM, 1.0)
+        self.assertAlmostEqual(T * T / (4 * abs(V)) / a.S_CGM, 1.0, places=12)
+        T, V = A.cgm2_trial(pot, 39.25, 1e5)
+        self.assertAlmostEqual(T * T / (4 * abs(V)) / (4 * math.pi ** 2 / (l2 * (0.5 - 3 / 32))), 1.0, places=4)
+        S2, _, n2 = A.cgm2_estimate(pot, a.lnh_CGM)
+        self.assertLess(S2, a.S_CGM)
+        self.assertGreater(n2, 1.0)
+        for q, finite in ((0.1, True), (0.085, False)):               # thresholds 13/72 (CGM) and 3/32 (CGM2)
+            pot = P.parabola_model(-q * l2, l2, 39.0)
+            a = A.estimates(pot, (15, 65))
+            self.assertFalse(math.isfinite(a.S_CGM))
+            S2, _, _ = A.cgm2_estimate(pot, a.x_min + 5.0 / 6.0)
+            self.assertEqual(math.isfinite(S2), finite)
+
 
 class TestBounce(unittest.TestCase):
     def test_spectral_vs_reference(self):

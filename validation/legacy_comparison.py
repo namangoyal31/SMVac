@@ -24,12 +24,13 @@ def main():
     ap.add_argument("--driver", required=True)
     ap.add_argument("--step", type=float, default=0.5)
     a = ap.parse_args()
-    new = pd.read_csv(os.path.join(ROOT, "results", "controlled_cw1.csv"), comment="#")
+    path = os.path.join(ROOT, "results", "controlled_cw1.csv")
+    new = pd.read_csv(path if os.path.exists(path) else path + ".gz", comment="#")
     mh = np.round(np.arange(120.0, 130.0 + 1e-9, a.step), 6)
     mt = np.round(np.arange(166.0, 182.0 + 1e-9, a.step), 6)
     pts = [(h, t) for t in mt for h in mh]
-    inp = "".join(f"{h!r} {t!r}\n" for h, t in pts)
-    out = subprocess.run([a.driver], input=inp, capture_output=True, text=True, check=True).stdout
+    inp = "".join(f"{float(h)!r} {float(t)!r}\n" for h, t in pts)   # plain floats (numpy 2 repr differs)
+    out = subprocess.run([os.path.abspath(a.driver)], input=inp, capture_output=True, text=True, check=True).stdout
     leg = pd.read_csv(io.StringIO(out))
     leg["legacy_status"] = leg.Stability.map(LEGACY_STATUS)
     leg = leg.rename(columns={"S_exact": "legacy_S_exact", "S_approx": "legacy_S_approx"})

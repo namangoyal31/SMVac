@@ -101,3 +101,81 @@ def estimates(pot, search=None) -> AnalyticResult:
         res.S_CGM = EIGHT_PI2_3 / abs(lb)
         res.lnLambdaB_FL = float(lnh + 0.5 * math.log(abs(lb) / 8.0))
     return res
+
+
+# --------------------------------------------------------------------------------------------------------------------
+# Two-parameter variational estimate S_CGM2 (tested as a possible improvement in the thin-wall regime).
+# Trial family phi(r) = h w(r/R), w(s) = (1 + s^(2n))^(-1/n). n = 1 is the Fubini-Lipatov shape; n -> infinity gives
+# w = min(1, s^-2): a flat core joined continuously to the FL tail h (R/r)^2. The tail amplitude is therefore always
+# tied to the core value h; the family cannot represent a thin wall across which the field drops below h R^2/r^2.
+# Within the Coleman-Glaser-Martin characterisation every trial gives T^2/(4|V|) >= S_b, so the minimum over (h, n)
+# is again a variational upper estimate (conditional on CGM attainment, like S_CGM), never larger than S_CGM.
+# T(h, n) = (2 pi^2 h^2 / n) B(2 + 1/n, 1/n) exactly (R = 1; the ratio T^2/|V| is independent of R).
+# Finiteness: for lambda = l2 [ (x - x0)^2 / 2 - q ], V < 0 for some h iff q > (1/2) Var(ln w) under the weight
+# w^4 s^3 ds. This threshold is 13/72 for n = 1 and decreases monotonically to 3/32 as n -> infinity
+# (docs/SCIENTIFIC_METHODOLOGY.md section 6.6a; validation/verify_derivations.py), so S_CGM2 is infinite for
+# q <= 3/32: the second shape parameter moves the divergence of S_CGM but does not remove it.
+# --------------------------------------------------------------------------------------------------------------------
+def _log_w(u: float, n: float) -> float:
+    """ln w(e^u) = -softplus(2 n u) / n, evaluated without overflow."""
+    z = 2.0 * n * u
+    return -(max(z, 0.0) + math.log1p(math.exp(-abs(z)))) / n
+
+
+def _u_of_log_w(lw: float, n: float) -> float:
+    """Inverse of _log_w for lw < 0."""
+    L = -lw * n
+    return (L + math.log(-math.expm1(-L))) / (2.0 * n)
+
+
+def cgm2_trial(pot, lnh: float, n: float, epsrel: float = 1e-11):
+    """(T, V) of the trial phi = h w(r) at R = 1 (units GeV^-1): S(R) = T R^2 + V R^4 is maximal at
+    R^2 = T / (2|V|), where it equals T^2 / (4|V|) (V < 0 required)."""
+    from scipy.special import beta as Bfun
+    T = 2.0 * math.pi ** 2 * math.exp(2.0 * lnh) / n * Bfun(2.0 + 1.0 / n, 1.0 / n)
+
+    def integrand(u):          # s^4 w^4 lambda(ln h + ln w), s = e^u  (V = (pi^2/2) h^4 int ... du)
+        lw = _log_w(u, n)
+        return math.exp(4.0 * (u + lw)) * pot.ev(lnh + lw)[0]
+    pts = {-4.0 / n, 0.0, 4.0 / n}                                  # core-tail transition (width ~ 1/n)
+    pts.update(_u_of_log_w(k - lnh, n) for k in pot.kinks() if k < lnh)   # images of kinks of lambda
+    edges = [-18.0] + sorted(p for p in pts if -18.0 < p < 18.0) + [18.0]
+    V = 0.5 * math.pi ** 2 * math.exp(4.0 * lnh) * sum(
+        quad(integrand, a, b, limit=400, epsabs=0.0, epsrel=epsrel)[0] for a, b in zip(edges[:-1], edges[1:]))
+    return T, V
+
+
+def _cgm2_ratio(pot, lnh: float, n: float, epsrel: float = 1e-11) -> float:
+    """T^2 / (4 |V|) for the trial (h = e^lnh, n); 1e300 if V >= 0 (finite penalty for Nelder-Mead)."""
+    T, V = cgm2_trial(pot, lnh, n, epsrel)
+    return T * T / (4.0 * abs(V)) if V < 0 else 1e300
+
+
+def cgm2_estimate(pot, lnh_guess: float, n_max: float = 1000.0):
+    """min over (ln h, n), 0.5 <= n <= n_max, of T^2/(4|V|) for the family above. Returns (S_CGM2, ln h, n).
+
+    A coarse scan in ln h (lnh_guess - 2 ... + 1.5) and n (1 ... n_max) locates the region with V < 0; Nelder-Mead
+    on ln S in (ln h, ln n) then refines the three best scan points. Returns (inf, lnh_guess, nan) if no member has
+    V < 0. An optimum with n at n_max signals that the n -> infinity limit is approached (close to q = 3/32)."""
+    from scipy.optimize import minimize
+    if not math.isfinite(lnh_guess):
+        return float("inf"), float("nan"), float("nan")
+    ns = [n for n in (1.0, 1.5, 2.0, 3.0, 5.0, 10.0, 30.0, 100.0, 300.0, 1000.0) if n <= n_max]
+    grid = [(lnh_guess + d, n) for d in np.arange(-2.0, 1.5001, 0.1) for n in ns]
+    vals = np.array([_cgm2_ratio(pot, l, n, epsrel=1e-8) for l, n in grid])
+    if vals.min() >= 1e299:
+        return float("inf"), float(lnh_guess), float("nan")
+    clamp = lambda ln_n: min(n_max, max(0.5, math.exp(ln_n)))
+    f = lambda p: math.log(_cgm2_ratio(pot, p[0], clamp(p[1])))
+    best = (float("inf"), float("nan"), float("nan"))
+    for k in np.argsort(vals)[:3]:
+        if vals[k] >= 1e299:
+            break
+        l0, n0 = grid[k]
+        r = minimize(f, [l0, math.log(n0)], method="Nelder-Mead",
+                     options=dict(xatol=1e-8, fatol=1e-13, maxiter=4000,
+                                  initial_simplex=[[l0, math.log(n0)], [l0 + 0.05, math.log(n0)],
+                                                   [l0, math.log(n0) + 0.1]]))
+        if math.exp(r.fun) < best[0]:
+            best = (float(math.exp(r.fun)), float(r.x[0]), float(clamp(r.x[1])))
+    return best

@@ -22,6 +22,9 @@ for the current results.
 | `ODE_VERIFICATION_PLAN.md`, `POTENTIAL_STRUCTURE_REPORT.md`, `POTENTIAL_DISCREPANCY_REPORT.md` | plans and notes for an ODE-based check at (5, 105) GeV |
 | `error_analysis_report.md`, `stability_analysis_report.md`, `stability_code_report.md` | numerical-error claims and code reports for the legacy solver |
 
+`error_analysis_report.md` embeds images through absolute paths on the author's former machine. Those images
+were never committed, so the links are broken; the file is kept unchanged as a historical record.
+
 Removed from the repository, with their history preserved in git:
 
 * three AI-assistant prompt files and an AI-agent configuration file (`AGENTS.md`);

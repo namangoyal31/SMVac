@@ -12,7 +12,8 @@ abstract: >-
   Three-loop renormalization-group evolution of the Standard Model couplings, the RG-improved effective quartic,
   and the tree-level O(4) bounce action of the electroweak vacuum computed with a validated numerical reference
   (spectral collocation), compared against the Fubini-Lipatov analytical approximation used in the literature,
-  a rigorous lower bound, a variational upper estimate and a curvature-corrected estimate.
+  a rigorous lower bound, a curvature-corrected estimate and one- and two-parameter variational upper estimates,
+  including a quantitative study of their breakdown near the absolute-stability boundary.
 keywords:
   - vacuum stability
   - Higgs boson

@@ -2,11 +2,21 @@
 docs/NUMERICAL_METHOD_COMPARISON.md). The consensus value per case is the median of the successful runs of
 M1, M2 and M4 (three structurally different methods)."""
 import os
+import sys
 
 import numpy as np
 import pandas as pd
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.stdout.reconfigure(encoding="utf-8")
+OUT = open(os.path.join(ROOT, "validation", "results", "method_comparison_tables.md"), "w", encoding="utf-8")
+_print = print
+
+
+def print(*a, **k):  # echo to stdout and to the Markdown file used by docs/NUMERICAL_METHOD_COMPARISON.md
+    _print(*a, **k)
+    _print(*a, file=OUT)
+
 df = pd.read_csv(os.path.join(ROOT, "validation", "results", "method_comparison.csv"))
 methods = ["M0", "M1", "M2", "M3", "M4"]
 
@@ -44,7 +54,7 @@ print("|" + "---|" * (3 + len(methods)))
 for r in rows_dev:
     print("| " + " | ".join(r) + " |")
 print()
-print("| case | q = |λ_min|/λ'' | (S−S_FL)/S | (S_curv−S)/S | (S_CGM−S)/S |")
+print("| case | q = λ_min/λ″ (abs.) | (S−S_FL)/S | (S_curv−S)/S | (S_CGM−S)/S |")
 print("|---|---|---|---|---|")
 for r in rows_an:
     print("| " + " | ".join(r) + " |")

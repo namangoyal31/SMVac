@@ -1,0 +1,58 @@
+1. Sharp Sobolev constant K = 3/(32 pi^2) = 0.009498860966469
+   FL 1/(1+r^2)   Q/K = 1.000000000000  <= 1 ok
+   (1+r^2)^-1.5   Q/K = 0.948148148148  <= 1 ok
+   (1+r^2)^-3     Q/K = 0.824915824916  <= 1 ok
+   Gaussian       Q/K = 0.666666666667  <= 1 ok
+   sech(r)        Q/K = 0.849369919007  <= 1 ok
+   (1+r) e^-r     Q/K = 0.827777777778  <= 1 ok
+
+2. Variational formula: direct r-space T^2/(4|V|) vs (8pi^2/3)/|lambdabar(h)|
+   parabola q=2.5  ln h = x_opt-1.0: direct = 289307.487788  formula = 289307.487788  rel diff = 7.8e-16
+   parabola q=2.5  ln h = x_opt+0.0: direct = 226941.801798  formula = 226941.801798  rel diff = 1.1e-16
+   parabola q=2.5  ln h = x_opt+1.5: direct = 440689.312793  formula = 440689.312793  rel diff = 2.2e-16
+   SM cw1 central  ln h = x_opt-1.0: direct = 1859.70683124  formula = 1859.70683124  rel diff = 3.8e-14
+   SM cw1 central  ln h = x_opt+0.0: direct = 1856.01649194  formula = 1856.01649194  rel diff = 5.8e-15
+   SM cw1 central  ln h = x_opt+1.5: direct = 1863.79537934  formula = 1863.79537934  rel diff = 3.2e-14
+
+3. Curvature coefficient: E[ln w] = -0.833333333333334 (exact -5/6 = -0.833333333333333); Var/2 = 0.180555555555555 (exact 13/72 = 0.180555555555556)
+
+4. First-order asymptotics for the parabolic model (numerical reference: M4, adaptive N)
+   q         (S-S_FL)/S_FL     13/(72 q)        ratio      (S_curv-S)/S   (S_CGM-S)/S
+      3000   6.018367e-05    6.018519e-05    0.999975   +5.138e-09    +5.138e-09
+      1000   1.805419e-04    1.805556e-04    0.999924   +4.623e-08    +4.623e-08
+       300   6.017006e-04    6.018519e-04    0.999749   +5.134e-07    +5.134e-07
+       100   1.804201e-03    1.805556e-03    0.999250   +4.612e-06    +4.612e-06
+        30   6.003712e-03    6.018519e-03    0.997540   +5.094e-05    +5.094e-05
+        10   1.792823e-02    1.805556e-02    0.992948   +4.512e-04    +4.512e-04
+         3   5.896136e-02    6.018519e-02    0.979666   +4.795e-03    +4.795e-03
+
+5. S_curv is an approximation, not a bound: sign of (S_curv - S_num) at benchmark points
+   parabola q=250  S_FL=2105.515606 S_num=2107.035797 S_curv=2107.037355 S_CGM=2107.037355  S_curv > S_num
+   SM cw1 central  S_FL=1854.690678 S_num=1856.015138 S_curv=1855.987095 S_CGM=1856.016492  S_curv < S_num
+
+6. Finiteness threshold q_c(n) = (1/2) Var(ln w_n) under w_n^4 s^3 ds, w_n = (1 + s^(2n))^(-1/n)
+   n =        1   q_c = 0.180555555556
+   n =      1.5   q_c = 0.142604825793  decreasing ok
+   n =        2   q_c = 0.125000000000  decreasing ok
+   n =        3   q_c = 0.109348793552  decreasing ok
+   n =        5   q_c = 0.099517649061  decreasing ok
+   n =       10   q_c = 0.094960103074  decreasing ok
+   n =       30   q_c = 0.093819050054  decreasing ok
+   n =      100   q_c = 0.093752220327  decreasing ok
+   n =     1000   q_c = 0.093750002385  decreasing ok
+   n =    10000   q_c = 0.093749997945  decreasing ok
+   limits: 13/72 = 0.180555555556   3/32 = 0.093750000000
+
+7. Two-parameter family: n = 1 member vs S_CGM; n -> infinity member vs 4 pi^2/(l2 (q - 3/32))
+   q =   2.5: n=1 member 226941.801798   S_CGM 226941.801798   rel diff 1.1e-16
+   q =   2.5: n=1e5 member at ln h = x0+1/4: 328125.7398   closed form (n=inf) 328132.3022   rel diff 2.0e-05
+   q =   0.5: n=1 member 1647794.82175   S_CGM 1647794.82175   rel diff 1.4e-15
+   q =   0.5: n=1e5 member at ln h = x0+1/4: 1943513.997   closed form (n=inf) 1943552.867   rel diff 2.0e-05
+   q =  0.15: n=1e5 member at ln h = x0+1/4: 14036489.98   closed form (n=inf) 14036770.7   rel diff 2.0e-05
+
+8. Concentration of the exact bounce: (1/2) Var(ln phi) under phi^4 r^3 dr vs q (parabolic model, M4)
+   q =   2.5: (1/2) Var(ln phi) = 0.151812  (1/2) <(ln phi - x0)^2> = 0.151812  < q: ok   ratio to q = 0.0607   <ln phi> - x0 = +0.0e+00 (dilatation identity: 0)
+   q =   0.5: (1/2) Var(ln phi) = 0.099815  (1/2) <(ln phi - x0)^2> = 0.099815  < q: ok   ratio to q = 0.1996   <ln phi> - x0 = -7.1e-15 (dilatation identity: 0)
+   q =   0.2: (1/2) Var(ln phi) = 0.064642  (1/2) <(ln phi - x0)^2> = 0.064642  < q: ok   ratio to q = 0.3232   <ln phi> - x0 = -2.1e-14 (dilatation identity: 0)
+   q =   0.1: (1/2) Var(ln phi) = 0.042071  (1/2) <(ln phi - x0)^2> = 0.042071  < q: ok   ratio to q = 0.4207   <ln phi> - x0 = -2.8e-14 (dilatation identity: 0)
+   q =  0.05: (1/2) Var(ln phi) = 0.025300  (1/2) <(ln phi - x0)^2> = 0.025300  < q: ok   ratio to q = 0.5060   <ln phi> - x0 = +7.1e-15 (dilatation identity: 0)

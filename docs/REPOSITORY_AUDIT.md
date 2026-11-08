@@ -14,6 +14,11 @@ physics and numerics are reviewed in `docs/SCIENTIFIC_METHODOLOGY.md` and
 `docs/NUMERICAL_METHODS_REVIEW.md`. All quantitative statements here can be reproduced with the
 scripts in `audit/` (see `audit/README.md`).
 
+> **Paths** in this audit refer to the audited revision `a7c070a`. After the clean-up (commit `bb4b5b7`), the
+> original code, data, figures and scripts are in `legacy/` and the working notes in `docs/archive/`. The AI-prompt
+> files and `docs/AGENTS.md` were removed; they remain in the git history. The licence situation described in §7
+> is unchanged.
+
 ---
 
 ## 1. Repository structure (95 tracked files)
