@@ -149,7 +149,9 @@ Sources:
 
 * `results/controlled_cw1.csv`, `results/controlled_tree.csv`, `results/controlled_cw1_fallback.csv` and
   `results/summary.json`, from `python/smvac/run_scan.py`, `validation/fallback_shooting.py` and
-  `validation/analyze_scans.py`;
+  `validation/analyze_scans.py`. The scan headers record `git_commit = bb4b5b7…-dirty`. That is commit
+  `bb4b5b7` (renamed `1d0d435` after a message-only edit) plus changes committed in `ad63002`, so the producing
+  source is that of `ad63002` (README §8; confirmed by `validation/reproduce_sample.py`);
 * `validation/results/near_critical_*.csv` and `near_critical_summary.json`, from `validation/near_critical.py`
   and `validation/analyze_near_critical.py`.
 

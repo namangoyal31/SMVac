@@ -212,6 +212,10 @@ The long-double comparison is not built by default:
 * **Metadata.** Each scan CSV begins with a metadata header recording the code version and git commit, all physics
   options (prescription, matching, $\alpha_s$, $H_0$, whether the BSM deformation is on), the solver settings, the
   grid and the timestamps.
+* **Provenance of the committed scans.** Their headers record `git_commit = bb4b5b7…-dirty`. They were run on
+  that commit plus uncommitted changes, all of which were committed in `ad63002`. Commit `bb4b5b7` was later
+  renamed `1d0d435` when its message was edited; its content is identical. The scans therefore come from the source
+  of `ad63002`, which `validation/reproduce_sample.py` confirms by recomputation.
 * **Per-point cost** (`build/smvac_point`, unloaded): 0.36 s for a typical point, 2.3 s for a reduced-accuracy
   point.
 
