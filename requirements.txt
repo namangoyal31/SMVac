@@ -1,3 +1,7 @@
-pandas
-numpy
-matplotlib
+# Python dependencies for orchestration, plotting and the independent reference implementations.
+# Versions are the ones used to produce the committed results (see results/*.csv headers); older recent
+# versions should work.
+numpy>=1.26
+scipy>=1.11
+pandas>=2.0
+matplotlib>=3.8

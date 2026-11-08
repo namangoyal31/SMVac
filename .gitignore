@@ -49,7 +49,6 @@ Thumbs.db
 
 # Project specific
 external/
-results/*.csv
 
 # Ignore generated data chunks
 data/data_numerical_chunk_*.csv
@@ -63,3 +62,8 @@ apps/*.out
 # Python
 __pycache__/
 *.pyc
+# Build tree and transient outputs of the new layout
+build/
+validation/results_*.log
+build_configure.log
+*.tmp

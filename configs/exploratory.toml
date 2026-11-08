@@ -1,0 +1,15 @@
+# EXPLORATORY scan over [0, 250]^2 GeV. Far outside the validity of the matching formulas: an uncontrolled
+# extrapolation kept only for continuity with the historical wide scan (legacy/data). Not a physical prediction.
+[grid]
+mh = [0.0, 250.0, 2.5]
+mt = [2.5, 250.0, 2.5]       # M_t = 0 is not a valid input (the running starts at mu = M_t)
+
+[physics]
+prescription = "cw1"
+matching = "extended"        # lambda with tree-level M_h^2 dependence (avoids lambda(M_t) < 0 at small M_h)
+alpha3 = 0.1184
+h0 = 67.4
+
+[output]
+path = "results/exploratory_cw1.csv"
+label = "EXPLORATORY [0,250]^2 GeV (uncontrolled extrapolation)"

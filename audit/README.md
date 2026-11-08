@@ -7,7 +7,7 @@ and matplotlib.
 
 | Script | Purpose |
 |---|---|
-| `legacy_port.py` | Faithful Python port of `apps/solver_numerical.cpp`. The beta functions are extracted mechanically into `_legacy_betas_extracted.py`. Options switch individual defects on or off. |
+| `legacy_port.py` | Faithful Python port of `legacy/apps/solver_numerical.cpp` (originally `apps/solver_numerical.cpp`). The beta functions are extracted mechanically into `_legacy_betas_extracted.py`. Options switch individual defects on or off. |
 | `validate_port.py` | Compares the port with the compiled legacy binary (`legacy_driver.cpp`). It agrees exactly with an SSE2 build; x87 builds differ at ~1e-6 in `S_exact` only. |
 | `legacy_driver.cpp` | Evaluates the legacy `classify_stability` at points read from stdin. |
 | `check_power_counting.py` | Literature-independent loop-order consistency test of the beta functions. |
@@ -20,7 +20,7 @@ and matplotlib.
 Building the legacy driver (64-bit IEEE arithmetic, matching the port):
 
 ```bash
-g++ -std=c++17 -O3 -msse2 -mfpmath=sse -Dmain=legacy_main -c apps/solver_numerical.cpp -o solver.o
+g++ -std=c++17 -O3 -msse2 -mfpmath=sse -Dmain=legacy_main -c legacy/apps/solver_numerical.cpp -o solver.o
 g++ -std=c++17 -O3 -msse2 -mfpmath=sse -c audit/legacy_driver.cpp -o driver.o
 g++ solver.o driver.o -o legacy_driver
 printf "125.1 173.1\n5 105\n" | ./legacy_driver > out.csv

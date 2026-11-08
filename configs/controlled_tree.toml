@@ -1,0 +1,15 @@
+# Controlled region: inputs, matching and approximations are theoretically justified here
+# (docs/STAGE_C_PLAN.md section 4). Headline figures and conclusions use this scan only.
+[grid]
+mh = [120.0, 130.0, 0.1]     # Higgs pole mass [GeV]: min, max, step
+mt = [166.0, 182.0, 0.1]     # top pole mass [GeV]
+
+[physics]
+prescription = "tree"        # MS-bar lambda at mu = phi (scheme-systematic comparison)
+matching = "buttazzo2013"    # Buttazzo et al. (2013) eqs. (55)-(60)
+alpha3 = 0.1184
+h0 = 67.4
+
+[output]
+path = "results/controlled_tree.csv"
+label = "controlled region, prescription tree"

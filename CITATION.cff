@@ -3,7 +3,19 @@ message: "If you use this software, please cite it as below."
 authors:
   - family-names: "Goyal"
     given-names: "Naman"
-title: "SMVac: Precision Computation of Electroweak Vacuum Stability in the Standard Model"
-version: 1.0.0
-date-released: 2026-07-01
+    affiliation: "Indian Institute of Science (IISc), Bangalore"
+title: "SMVac: Standard Model electroweak vacuum stability — analytical approximations versus a numerical reference"
+version: 2.0.0-dev
 url: "https://github.com/namangoyal31/SMVac"
+repository-code: "https://github.com/namangoyal31/SMVac"
+abstract: >-
+  Three-loop renormalization-group evolution of the Standard Model couplings, the RG-improved effective quartic,
+  and the tree-level O(4) bounce action of the electroweak vacuum computed with a validated numerical reference
+  (spectral collocation), compared against the Fubini-Lipatov analytical approximation used in the literature,
+  a rigorous lower bound, a variational upper estimate and a curvature-corrected estimate.
+keywords:
+  - vacuum stability
+  - Higgs boson
+  - renormalization group
+  - bounce action
+  - vacuum decay

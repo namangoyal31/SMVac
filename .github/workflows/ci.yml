@@ -1,17 +1,24 @@
 name: CI
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "formalization" ]
   pull_request:
     branches: [ "main" ]
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Compile solver
-        run: g++ -std=c++17 -O3 -fopenmp apps/solver_numerical.cpp -o apps/generate_phase_diagram.exe
-      - name: Smoke test numerical mode
-        run: ./apps/generate_phase_diagram.exe --numerical 0 10
-      - name: Smoke test analytical mode
-        run: ./apps/generate_phase_diagram.exe --analytical 0 10
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build -j 2
+      - name: C++ tests
+        run: ctest --test-dir build --output-on-failure
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Python dependencies
+        run: pip install -r requirements.txt
+      - name: Python reference tests
+        run: python -m unittest discover -s python/tests -v
