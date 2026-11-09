@@ -9,11 +9,12 @@ version: 2.0.0-dev
 url: "https://github.com/namangoyal31/SMVac"
 repository-code: "https://github.com/namangoyal31/SMVac"
 abstract: >-
-  Three-loop renormalization-group evolution of the Standard Model couplings, the RG-improved effective quartic,
-  and the tree-level O(4) bounce action of the electroweak vacuum computed with a validated numerical reference
-  (spectral collocation), compared against the Fubini-Lipatov analytical approximation used in the literature,
-  a rigorous lower bound, a curvature-corrected estimate and one- and two-parameter variational upper estimates,
-  including a quantitative study of their breakdown near the absolute-stability boundary.
+  A reproducible computational investigation of the tree-level O(4) bounce action of the RG-improved Standard Model
+  potential (three-loop running, one-loop or MS-bar effective quartic), computed with a validated numerical
+  reference (spectral collocation). The reference is used to test established analytical approximations: the
+  Fubini-Lipatov formula (a rigorous lower bound), the first- and second-order running corrections of Espinosa
+  (2020), and resummed and variational estimates. The test includes their breakdown near the absolute-stability
+  boundary. The work does not compute the one-loop decay rate.
 keywords:
   - vacuum stability
   - Higgs boson

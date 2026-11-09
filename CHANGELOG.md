@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0-dev] — formalization branch (unreleased)
 
+### Final scientific corrections (after the independent review)
+- **Attribution corrected.** These results are prior work and are no longer presented as SMVac results:
+  - the lower-bound method is due to Wipf (1985);
+  - the thick-wall expansion (Fubini-weighted first-order action, $13/72$ coefficient, $\phi_0=\mu_0e^{5/6}$,
+    second-order term) is due to Espinosa (2020);
+  - earlier numerical solutions of the tree-level RG-improved bounce exist (Di Luzio, Isidori & Ridolfi 2016).
+  - The notation map is in `docs/SCIENTIFIC_METHODOLOGY.md` §6.5a.
+- **First-order approximation added to the main comparison.** `validation/compare_approximations.py` evaluates
+  $S_{\rm FL}$, $S_{\rm FL}(1+\frac{13}{72q})$, the second-order formula, $S_{\rm curv}$, $S_{\rm CGM}$ and
+  $S_{\rm CGM2}$ on identical selections of the committed datasets. It is post-processing only and is tested in
+  `python/tests/test_approximation_comparison.py`.
+  - The first-order formula has a maximum error of 1.54% over all standard-tier controlled-scan points.
+- **Overstatements removed.**
+  - "only numerical solutions are reliable near criticality";
+  - "new" labels on established estimates;
+  - "improved estimates" implying uniform superiority.
+- **Lower-bound application corrected** (`docs/VALIDATION_REPORT.md` §5.2). The bound now applies only to bounces
+  and the mountain-pass barrier, with its assumptions stated.
+- **Figures.** The comparison figures (maps, error scaling, near-critical panel b) now include the first-order
+  formula.
+- **Provenance.** The wording of the scan provenance (`bb4b5b7…-dirty` plus `max_nodes = 1024`) is made precise.
+  Datasets and their headers are unchanged.
+- The README is reorganised around the actual contribution. No licence was added.
+
 ### Stage D/E — near-critical study, final validation and documentation
 - **Near-critical study** (`validation/near_critical.py`, `validation/analyze_near_critical.py`):
   - parabolic model with $q$ from 1000 to 0.05;

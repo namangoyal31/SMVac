@@ -20,6 +20,14 @@ Companion documents: `docs/REPOSITORY_AUDIT.md` (inventory, provenance, testing)
 > near-critical failure of the variational estimates, the exact finiteness criterion, and the two-parameter
 > estimate (`python/smvac/reference/analytic.py`), and it is checked in `validation/verify_derivations.py`.
 >
+> **Attribution (final correction stage).**
+> * The lower-bound method is due to Wipf (1985).
+> * The thick-wall expansion, i.e. the Fubini-weighted first-order action, the $13/72$ coefficient, the scale
+>   $\phi_0=\mu_0e^{5/6}$ and the second-order term, is due to Espinosa (2020). §6.5a gives the notation map.
+> * SMVac implements and tests these results; it does not claim them.
+> * The unresummed first-order formula is part of the main comparison
+>   (`validation/compare_approximations.py`).
+>
 > **Paths.** File names in §0–§5 refer to the audited revision `a7c070a`. In the current tree:
 > `apps/solver_numerical.cpp`, `SMVacuumDecay/`, `data/`, `figures/` and `scripts/` of that revision are in
 > `legacy/`; its working notes from `docs/` are in `docs/archive/`.
@@ -44,7 +52,8 @@ Buttazzo et al. (2013), eq. (61), to the quoted precision **[verified]**. For th
 potential, a converged numerical solution of the tree-level bounce equation (computed here
 independently) agrees with the simple Fubini–Lipatov estimate $8\pi^2/(3|\lambda_{\rm eff,min}|)$
 to better than 0.1% at all benchmark points **[verified]**. That estimate is a rigorous lower
-bound (§6.2).
+bound for finite-action bounces (§6.2; the method is that of Wipf 1985). The thick-wall correction to it is the
+first-order result of Espinosa (2020) (§6.5a).
 
 **Fundamental problem (stop-and-explain item).** The repository's primary result is the phase
 diagram with constant-`S_exact` contours, and its quoted validation numbers (the "32.1%
@@ -209,9 +218,36 @@ $V=\lambda(\phi)\phi^4/4$ **[derived]**. The proof:
   exactly for Fubini–Lipatov profiles.
 * Combining: $S\ge8\pi^2/(3|\lambda_{\min}|)$.
 
-Assumptions: $\lambda_{\min}$ is the global minimum of $\lambda(\phi)$ over all field values,
-including any frozen regions, and the bounce has finite action. No existence or uniqueness
-assumption is needed.
+Assumptions:
+
+* the bounce is a finite-action critical point, $\phi\in D^{1,2}(\mathbb R^4)$, with $\phi\to0$ at
+  infinity, decaying like $r^{-2}$ with $|\nabla\phi|=O(r^{-3})$ (massless false vacuum). This decay makes the
+  boundary terms of the Pohozaev multiplier argument vanish;
+* $V(\phi)$ is continuous with a piecewise-continuous derivative (so the kink at $M_{\rm Pl}$ is allowed);
+* $\lambda_{\min}$ is the minimum of $\lambda(\phi)$ over the field range of the bounce. The global minimum,
+  including any frozen regions, gives a weaker but valid bound;
+* the false vacuum is at $\phi=0$, i.e. the electroweak mass term is dropped, as everywhere in this repository.
+
+No existence or uniqueness assumption is needed, and O(4) symmetry is not required. For the Higgs doublet the
+same bound holds with $|\Phi|$, by Kato's inequality. Equality requires both the Fubini–Lipatov profile and
+$\lambda\equiv\lambda_{\min}$ on $(0,\phi(0)]$, so the inequality is strict for any running $\lambda$.
+
+The bound applies to critical points, **not** to arbitrary field configurations, on which the action is
+unbounded below. For configurations, the corresponding statement is about the scale-maximised action. For any
+configuration with $V_{\rm int}<0$, $\max_aS(\phi_a)=T^2/(4|V_{\rm int}|)\ge S_{\rm FL}$, by the same Sobolev
+step. Every path from $\phi=0$ to a configuration with $S<0$ crosses the Pohozaev manifold $T+2V_{\rm int}=0$,
+on which $S=T^2/(4|V_{\rm int}|)$. Hence the mountain-pass barrier is at least $S_{\rm FL}$.
+
+**Prior work.** This bound is not a new method:
+
+* Lower bounds on the bounce action from the inf-max (Coleman–Glaser–Martin) characterisation combined with
+  Hölder–Young and Sobolev inequalities with the sharpest constants were given by Wipf (1985). The bound above
+  is that method applied to the critical quartic.
+* Sato & Takimoto (2018) give the general bound $S\ge24/\lambda_{\rm cr}$, with
+  $\lambda_{\rm cr}=\max[-4V/|\phi|^4]$, for multi-field potentials. For the class considered here the sharp
+  Sobolev constant gives the stronger $8\pi^2/3\simeq26.3$.
+* Di Luzio, Isidori & Ridolfi (2016) note that $8\pi^2/(3|\lambda(1/R)|)$ acts as a lower bound for the SM bounce
+  with running $\lambda$.
 
 ### 6.3 `S_exact` — what the original code actually computes (unsound)
 
@@ -241,7 +277,13 @@ golden-section search. Consequences:
 * It is neither an upper nor a lower bound. At the SM point it exceeds the variational upper
   estimate for its own potential. At (115, 180) it falls below the rigorous lower bound (§6.6).
 
-### 6.4 Lower bound and variational upper estimate (new, cheap) [derived, verified]
+### 6.4 Lower bound and variational upper estimate (established methods, applied here) [derived, verified]
+
+*Attribution.* The variational use of the CGM characterisation with trial functions to obtain upper estimates,
+and its combination with Sobolev inequalities for lower bounds, is due to Wipf (1985). The Fubini-weighted
+average $\bar\lambda(h)$ below is the first-order "average over the Fubini bounce" of Espinosa (2020), eq. (3.25).
+The upper estimate below is the resummed (variational) form of his first-order action, eq. (3.27). SMVac
+implements and tests these quantities; it did not introduce them.
 
 Coleman, Glaser and Martin (1978) characterise the least-action bounce in $d\ge3$ as the
 minimiser of $T^2/(4|V_{\rm int}|)$ over configurations with $V_{\rm int}<0$. **The resulting upper
@@ -259,7 +301,11 @@ sides are one-dimensional minimisations of smooth functions. They make no ODE so
 no assumption of slow running. For constant $\lambda$ they coincide with $S_0$; their gap
 measures how far the potential is from scale invariance over about one decade of field.
 
-### 6.5 Numerical O(4) bounce (new) [verified]
+### 6.5 Numerical O(4) bounce (added in this repository; standard problem) [verified]
+
+The tree-level bounce of the RG-improved SM potential has been solved numerically before, e.g. at the central
+SM point by Di Luzio, Isidori & Ridolfi (2016). SMVac's contribution is a validated, systematic reference across
+the $(M_h,M_t)$ plane, not the formulation.
 
 The bounce of the RG-improved potential is a homoclinic orbit of the $f$ equation. The
 mechanical energy $E=\tfrac12f'^2-\tfrac12f^2-\tfrac14\lambda f^4$ obeys
@@ -307,7 +353,60 @@ Conclusions:
   result is dominated by the Planck-scale treatment (couplings frozen, plus $\phi^6$), not by SM
   RG effects.
 
-### 6.6a Why the variational estimates fail near the stability boundary [derived, verified]
+### 6.5a The thick-wall expansion: prior work by Espinosa (2020) and its numerical test
+
+The perturbative treatment of the running-coupling bounce about the Fubini instanton is due to J. R. Espinosa,
+*Vacuum decay in the Standard Model: analytical results with running and gravity*, JCAP 06 (2020) 052,
+arXiv:2003.06219. That work contains the following, which SMVac does **not** claim as its own:
+
+* the scale identification of the bounce, $\phi_0=\mu_0e^{5/6}$;
+* the Fubini-weighted first-order average;
+* the coefficient equivalent to $13/72$;
+* the second-order correction.
+
+**Notation map** (Espinosa ↔ SMVac; flat space, $\kappa=0$):
+
+| Espinosa (2020) | SMVac | statement |
+|---|---|---|
+| $V=\frac14\lambda(\phi)\phi^4$ (3.1) | $V=\lambda_P(\phi)\phi^4/4$ | same problem: tree-level bounce of the RG-improved quartic |
+| $\lambda(\phi)=-\lambda_0+\frac12\beta'_\lambda\ln^2(\phi/\mu_0)$ (3.3) | $\lambda=\lambda''[\frac12(x-x_0)^2-q]$, $x=\ln\phi$ | $\lambda_0=\lvert\lambda_{\min}\rvert$, $\beta'_\lambda=\lambda''_{\min}$, $\mu_0=e^{x_0}$, $q=\lambda_0/\beta'_\lambda$ |
+| $\int\phi_B^4\beta_\lambda(\phi_B)r^3dr=0$ (3.23) | $\int(d\lambda/dx)f^4d\tau=0$ | dilatation (Affleck) identity |
+| $\phi_0=\mu_0e^{5/6}$ (3.17) | optimal $\ln h=x_{\min}+\frac56$ of the FL trial | first-order scale identification |
+| $\langle f\rangle_{\phi_0}=6\int_0^1x(1-x)f(x\phi_0)dx$ (3.25) | $\bar\lambda(h)=6\int_0^1w(1-w)\lambda(hw)dw$ | Fubini-weighted average |
+| $S\simeq\langle8\pi^2/(3\lvert\lambda(\phi)\rvert)\rangle_{\phi_0}$, expanded (3.27)–(3.29) | $S_{\rm CGM}=8\pi^2/(3\lvert\min_h\bar\lambda\rvert)$; for quadratic $\lambda$, $S_{\rm curv}$ | SMVac's quantities are *resummed* forms of this first-order result |
+| $S=\frac{8\pi^2}{3\lambda_0}+\frac{13\pi^2}{27\lambda_0^2}\beta'_\lambda$ (3.21) | $S_{\rm E1}\equiv S_{\rm FL}\,(1+\frac{13}{72q})$ | identical, since $\frac{13\pi^2/27}{8\pi^2/3}=\frac{13}{72}$ |
+| $O(\beta'^2)$ term of (6.5) with $L_0=\frac56$, $K_0=0.118718$ | $S_{\rm E2}\equiv S_{\rm FL}(1+\frac{13}{72q}+\frac{c_2}{q^2})$, $c_2=-0.013644$ | second order; the $O(\beta')$ shift of $L_0$ enters only at third order |
+
+**Numerical confirmation [verified].** On SMVac's parabolic-model data, the residual after the first-order term,
+$[(S/S_{\rm FL}-1)-\frac{13}{72q}]\,q^2$, takes the values below and approaches $c_2=-0.013644$ with an
+$O(1/q)$ trend. This tests the numerical reference against an independent analytic result through second order.
+
+| $q$ | 1000 | 300 | 100 | 30 |
+|---|---|---|---|---|
+| residual × $q^2$ | −0.01363 | −0.01361 | −0.01355 | −0.01333 |
+
+The implied coefficient of the resummed/variational form, $(S_{\rm CGM}-S)/S\to[(13/72)^2-c_2]/q^2=0.0462/q^2$,
+equals the fitted value. `validation/compare_approximations.py` evaluates $c_2$ from eq. (6.5), and
+`python/tests/test_approximation_comparison.py` tests the scaling.
+
+**Performance of the unresummed first-order formula.** The formula is formally valid for $q\gg1$. On the stored
+data it remains accurate far outside that domain
+(`validation/results/approximation_comparison.json`; signed errors in parentheses):
+
+* parabolic model: $|e|\le2.7\%$ for all $q\ge0.1$, with the maximum (+2.65%) at $q=0.2$. It reaches −4.0% at
+  $q=0.07$ and −10.2% at $q=0.05$;
+* SM near-critical lines: $|e|\le1.7\%$ for $q\ge0.097$, −3.2% at $q=0.084$ and −14.9% at $q=0.044$;
+* all 21,626 standard-tier points of both controlled scans: median $9.2\times10^{-6}$, maximum 1.54% (at
+  $q=0.338$).
+
+There is no theoretical justification for this accuracy at $q\lesssim1$, so it is an **empirical observation**.
+The second-order truncation is *worse* there, as expected of an asymptotic series.
+
+### 6.6a Why the resummed and fixed-shape variational estimates fail near the stability boundary [derived, verified]
+
+*Scope.* The criterion below is an elementary lemma. It holds exactly for $\lambda$ quadratic in $\ln\phi$, an
+idealised model potential. In the SM the cubic terms shift the poles slightly. I did not find it in the
+literature reviewed (`docs/INDEPENDENT_SCIENTIFIC_REVIEW.md` §4), but given its simplicity no novelty is claimed.
 
 **A finiteness criterion for any fixed-shape estimate.** Take a trial $\phi=h\,g(r/R)$ of fixed shape $g$.
 Maximising $S=TR^2+VR^4$ over the size $R$ gives $T^2/(4|V|)$, with
@@ -324,9 +423,15 @@ field values the shape samples.
   $$S_{\rm CGM}=\frac{8\pi^2}{3\lambda''\,(q-13/72)}.$$
   $S_{\rm curv}$ is the same expression for quadratic $\lambda$. In the SM the cubic terms move the two poles
   slightly apart.
-* **Two-parameter family ($S_{\rm CGM2}$, $w_n=(1+s^{2n})^{-1/n}$).** $q_c(n)$ decreases monotonically: $13/72$ at
-  $n=1$, $1/8$ at $n=2$, and $3/32=0.09375$ as $n\to\infty$. This is verified numerically to $10^{-9}$
-  (`validation/results/derivation_checks.txt` §6). The limit member $w=\min(1,s^{-2})$ has a flat core joined to
+* **Two-parameter family ($S_{\rm CGM2}$, $w_n=(1+s^{2n})^{-1/n}$).**
+  * Under the weight $w^4s^3ds$, $t=s^{2n}$ follows a beta-prime distribution $\beta'(\frac2n,\frac2n)$. So
+    $1/(1+t)\sim{\rm Beta}(\frac2n,\frac2n)$ and $\ln w=\frac1n\ln\frac1{1+t}$, which gives
+    $$q_c(n)=\frac{\psi'(2/n)-\psi'(4/n)}{2n^2}$$
+    with $\psi'$ the trigamma function.
+  * With $z=2/n$, $q_c=\frac18[\frac34+\sum_{k\ge1}g_k(z)]$, where $g_k=\frac{z^2}{(z+k)^2}-\frac{z^2}{(2z+k)^2}$
+    increases with $z$. So $q_c(n)$ decreases strictly and monotonically: $13/72$ at $n=1$, $1/8$ at $n=2$, and
+    $3/32=0.09375$ as $n\to\infty$. The limit is not attained at any finite $n$.
+  * Direct quadrature agrees with the closed form (`validation/results/derivation_checks.txt` §6). The limit member $w=\min(1,s^{-2})$ has a flat core joined to
   the FL tail $h(R/r)^2$. It puts half its weight at $\ln w=0$ and half in the tail, where $\ln w$ is distributed
   as $-{\rm Exp}(2)$, so $\mathrm{Var}=\tfrac3{16}$. In closed form, $S_\infty=4\pi^2/[\lambda''(q-3/32)]$ at
   $\ln h=x_{\min}+\tfrac14$ (checks §7). **So $S_{\rm CGM2}=\infty$ for $q\le3/32$: the shape parameter moves
@@ -349,12 +454,16 @@ field values the shape samples.
 **Consequences, quantified on the parabolic model** (`validation/results/near_critical_summary.json`; the
 numerical reference is M4 with adaptive $N$, cross-checked by M2 shooting to $1.1\times10^{-11}$):
 
-| quantity | $S_{\rm FL}$ (lower bound) | $S_{\rm CGM}$ (FL trial) | $S_{\rm CGM2}$ (two-parameter trial) |
-|---|---|---|---|
-| thick-wall error, $q\to\infty$ | $\tfrac{13}{72}q^{-1}$ (derived; ratio 0.99992 at $q=1000$) | $0.0462\,q^{-2}$ (fit, $q\ge30$) | $0.0103\,q^{-2}$ (fit; $0.22\times$ the $S_{\rm CGM}$ error) |
-| $q$ at which the error reaches 1% / 10% / 100% | 17.8 / 1.55 / never (capped at 100%) | 2.06 / 0.64 / 0.26 | 0.93 / 0.30 / 0.13 |
-| finite for | all $q>0$ | $q>13/72$ | $q>3/32$ |
-| error at $q=0.5$ / $0.2$ / $0.1$ | 25% / 46% / 64% | +17% / +455% / $\infty$ | +3.4% / +26% / +712% |
+| quantity | $S_{\rm FL}$ (lower bound) | $S_{\rm E1}$ (first order, Espinosa) | $S_{\rm CGM}=S_{\rm curv}$ (FL trial, resummed) | $S_{\rm CGM2}$ (two-parameter trial) |
+|---|---|---|---|---|
+| thick-wall error, $q\to\infty$ | $\tfrac{13}{72}q^{-1}$ (Espinosa 2020; ratio 0.99992 at $q=1000$) | $-c_2q^{-2}=0.0136\,q^{-2}$ (Espinosa eq. 6.5) | $0.0462\,q^{-2}$ ($=(13/72)^2-c_2$) | $0.0103\,q^{-2}$ (fit; $0.22\times$ the $S_{\rm CGM}$ error) |
+| $q$ at which $\lvert e\rvert$ first reaches 1% / 10% | 17.8 / 1.55 | 0.72 / 0.05 | 2.06 / 0.64 | 0.93 / 0.30 |
+| finite for | all $q>0$ | all $q>0$ | $q>13/72$ | $q>3/32$ |
+| signed error at $q=0.5$ / $0.2$ / $0.1$ | −25% / −46% / −64% | +1.6% / +2.7% / +0.09% | +17% / +455% / $\infty$ | +3.4% / +26% / +712% |
+
+At every model point with $q\le0.5$, $S_{\rm E1}$ is more accurate than all the other estimates, including the
+second-order formula. For $q\ge1$ the second-order formula is the most accurate. For $q\ge3$, $S_{\rm CGM2}$ is
+also more accurate than $S_{\rm E1}$.
 
 * **Crossover.** $S_{\rm CGM}$ becomes less accurate than $S_{\rm FL}$ below $q^*=0.39$. $S_{\rm CGM2}$ does so
   below $q^*=0.16$. With the symmetric measure $|\ln(S_{\rm est}/S)|$ the crossovers are 0.31 and 0.12.
@@ -363,8 +472,10 @@ numerical reference is M4 with adaptive $N$, cross-checked by M2 shooting to $1.
   of $S_{\rm FL}$.
 * **The optimal shape** moves away from FL as the wall thins: $n_{\rm opt}-1\approx0.61/q$ for thick walls, and
   $n_{\rm opt}=2.2$, $4.5$, $22$ at $q=0.5$, $0.2$, $0.1$.
-* **No closed-form asymptotics cover $0.05\lesssim q\lesssim1$.** The thick-wall expansion fails there, and so
-  does the leading-order Coleman thin-wall action. For this model the thin-wall action is
+* **Closed forms in the crossover region $0.05\lesssim q\lesssim1$.** The *resummed* and *variational* forms
+  fail there. The *unresummed* first-order formula does not ($\le2.7\%$ for $q\ge0.1$, see §6.5a), but its
+  accuracy is not theoretically controlled. The leading-order Coleman thin-wall action fails as well. For this
+  model the thin-wall action is
   $S_{\rm TW}=27\pi^2\sigma^4/(2\varepsilon^3)=0.0812/(\lambda''q^3)$, with $\sigma=\sqrt{\lambda''}\phi_-^3/18$
   and $\varepsilon=q\lambda''\phi_-^4/4$. The ratio $S/S_{\rm TW}$ falls from 15.7 at $q=0.15$ to 4.2 at $q=0.05$.
   The local exponent $d\ln S/d\ln q$ steepens from $-1.6$ to $-1.95$, against $-3$ asymptotically, and $S_{\rm TW}$
@@ -442,5 +553,14 @@ Two further limitations:
    Cited for context; not re-read for this review.
 8. V. Branchina, E. Messina, Phys. Rev. Lett. 111 (2013) 241801, arXiv:1307.5193.
    Cited for context; not re-read for this review.
-9. A. Andreassen, W. Frost, M.D. Schwartz, Phys. Rev. D 97 (2018) 056006, arXiv:1707.08124.
-   Cited for context; not re-read for this review.
+9. A. Andreassen, W. Frost, M.D. Schwartz, *Scale invariant instantons and the complete lifetime of the Standard
+   Model*, Phys. Rev. D 97 (2018) 056006, arXiv:1707.08124. §3 read for the independent review.
+10. J. R. Espinosa, *Vacuum decay in the Standard Model: analytical results with running and gravity*, JCAP 06
+    (2020) 052, doi:10.1088/1475-7516/2020/06/052, arXiv:2003.06219. Eqs. (3.1)–(3.29), (6.5), (6.6) read from the
+    arXiv version (§6.5a).
+11. A. Wipf, *Upper and lower bounds for the bounce action*, J. Phys. A: Math. Gen. 18 (1985) 2521–2529.
+    Read (§6.2, §6.4).
+12. R. Sato, M. Takimoto, *Absolute lower bound on the bounce action*, Phys. Rev. Lett. 120 (2018) 091802,
+    arXiv:1707.01099.
+13. L. Di Luzio, G. Isidori, G. Ridolfi, *Stability of the electroweak ground state in the Standard Model and its
+    extensions*, Phys. Lett. B 753 (2016) 150, arXiv:1509.05028. Read (§6.2, §6.5).

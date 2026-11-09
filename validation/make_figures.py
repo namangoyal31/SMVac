@@ -138,10 +138,12 @@ def fig_phase_diagram(df, meta):
 
 def fig_discrepancy_maps(df):
     d = df[df.S_num.notna()].copy()
-    fig, axs = plt.subplots(1, 3, figsize=(13.5, 4.3), sharey=True)
-    specs = [("S_FL", r"$(S_{\rm num}-S_{\rm FL})/S_{\rm num}$ (literature; rigorous lower bound)"),
-             ("S_curv", r"$|S_{\rm curv}-S_{\rm num}|/S_{\rm num}$ (curvature-corrected)"),
-             ("S_CGM", r"$(S_{\rm CGM}-S_{\rm num})/S_{\rm num}$ (variational upper estimate)")]
+    d["S_E1"] = d.S_FL * (1 + (13 / 72) * d.lambda2 / d.lambda_min.abs())   # Espinosa (2020) eq. (3.21)
+    fig, axs = plt.subplots(1, 4, figsize=(18, 4.3), sharey=True)
+    specs = [("S_FL", r"$(S_{\rm num}-S_{\rm FL})/S_{\rm num}$ (FL; rigorous lower bound)"),
+             ("S_E1", r"$|S_{\rm E1}-S_{\rm num}|/S_{\rm num}$ (first order, Espinosa 2020)"),
+             ("S_curv", r"$|S_{\rm curv}-S_{\rm num}|/S_{\rm num}$ (resummed first order)"),
+             ("S_CGM", r"$(S_{\rm CGM}-S_{\rm num})/S_{\rm num}$ (variational, FL trial)")]
     norm = LogNorm(1e-9, 1e0)
     for ax, (col, title) in zip(axs, specs):
         d["err"] = (d[col] - d.S_num).abs() / d.S_num
@@ -166,10 +168,12 @@ def fig_error_scaling(dfs, comp):
     fig, ax = plt.subplots(figsize=(6.4, 4.8))
     styles = {"cw1": ("o", 0.25), "tree": ("s", 0.25)}
     for name, df in dfs.items():
-        d = df[(df.S_num.notna()) & (df.lambda2 > 0) & (df.planck_sensitive == 0)]
+        d = df[(df.S_num.notna()) & (df.lambda2 > 0) & (df.planck_sensitive == 0) & (df.reduced_accuracy == 0)]
         q = d.lambda_min.abs() / d.lambda2
         mk, al = styles.get(name, ("o", 0.3))
         ax.loglog(q, (d.S_num - d.S_FL) / d.S_num, mk, ms=2, alpha=al, color="#b2182b", rasterized=True)
+        ax.loglog(q, (d.S_FL * (1 + (13 / 72) / q) - d.S_num).abs() / d.S_num, mk, ms=2, alpha=al, color="#e6ab02",
+                  rasterized=True)
         ax.loglog(q, (d.S_curv - d.S_num).abs() / d.S_num, mk, ms=2, alpha=al, color="#2166ac", rasterized=True)
         ax.loglog(q, (d.S_CGM - d.S_num).abs() / d.S_num, mk, ms=2, alpha=al, color="#1b9e77", rasterized=True)
     if comp is not None:
@@ -178,10 +182,11 @@ def fig_error_scaling(dfs, comp):
         for case, row in ref.iterrows():
             ax.loglog(row.q, (row.S - row.S_FL) / row.S, "k*", ms=9, zorder=5)
     qq = np.logspace(-1, 3.5, 200)
-    ax.loglog(qq, (13 / 72) / qq, "k--", lw=1, label=r"first order: $\frac{13}{72}\,\lambda''/|\lambda_{\min}|$")
-    ax.plot([], [], "o", color="#b2182b", label=r"$S_{\rm FL}$ (literature)")
-    ax.plot([], [], "o", color="#2166ac", label=r"$S_{\rm curv}$")
-    ax.plot([], [], "o", color="#1b9e77", label=r"$S_{\rm CGM}$")
+    ax.loglog(qq, (13 / 72) / qq, "k--", lw=1, label=r"thick-wall law $\frac{13}{72}q^{-1}$ (Espinosa 2020)")
+    ax.plot([], [], "o", color="#b2182b", label=r"$S_{\rm FL}$ (literature; lower bound)")
+    ax.plot([], [], "o", color="#e6ab02", label=r"$S_{\rm E1}=S_{\rm FL}(1+\frac{13}{72q})$ (first order)")
+    ax.plot([], [], "o", color="#2166ac", label=r"$S_{\rm curv}=S_{\rm FL}/(1-\frac{13}{72q})$")
+    ax.plot([], [], "o", color="#1b9e77", label=r"$S_{\rm CGM}$ (variational, FL trial)")
     ax.plot([], [], "k*", ms=8, label="parabolic model (benchmark)")
     ax.set_xlabel(r"$q=|\lambda_{\min}|/\lambda''_{\min}$  (thin wall $\leftarrow$ $\rightarrow$ thick wall)")
     ax.set_ylabel("relative deviation from numerical reference")
@@ -405,7 +410,11 @@ def fig_near_critical(model, smlines, scans):
     a1.legend(fontsize=7, loc="upper right")
     a1.grid(alpha=0.3, which="both", lw=0.3)
     # (b) errors of the estimates
-    for col, c, lab in (("S_FL", "#b2182b", r"$S_{\rm FL}$ (lower bound)"), ("S_curv", "#2166ac", r"$S_{\rm curv}$"),
+    m = m.assign(S_E1=m.S_FL * (1 + (13 / 72) / m.q))                       # Espinosa (2020) eq. (3.21)
+    smlines = smlines.assign(S_E1=smlines.S_FL * (1 + (13 / 72) * smlines.lambda2 / smlines.lambda_min.abs()))
+    for col, c, lab in (("S_FL", "#b2182b", r"$S_{\rm FL}$ (lower bound)"),
+                        ("S_E1", "#e6ab02", r"$S_{\rm E1}$ (first order, Espinosa 2020)"),
+                        ("S_curv", "#2166ac", r"$S_{\rm curv}$ (resummed)"),
                         ("S_CGM", "#1b9e77", r"$S_{\rm CGM}$ (FL trial)"), ("S_CGM2", "#7570b3", r"$S_{\rm CGM2}$ (two-parameter trial)")):
         err = (m[col] - m.S_num).abs() / m.S_num
         a2.loglog(m.q, err.where(np.isfinite(m[col])), "-o", color=c, ms=3, lw=1.3, label=lab + " (model)")

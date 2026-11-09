@@ -149,9 +149,11 @@ Sources:
 
 * `results/controlled_cw1.csv`, `results/controlled_tree.csv`, `results/controlled_cw1_fallback.csv` and
   `results/summary.json`, from `python/smvac/run_scan.py`, `validation/fallback_shooting.py` and
-  `validation/analyze_scans.py`. The scan headers record `git_commit = bb4b5b7…-dirty`. That is commit
-  `bb4b5b7` (renamed `1d0d435` after a message-only edit) plus changes committed in `ad63002`, so the producing
-  source is that of `ad63002` (README §8; confirmed by `validation/reproduce_sample.py`);
+  `validation/analyze_scans.py`. For their provenance (`git_commit = bb4b5b7…-dirty`), see README §8. In short:
+  * the scan binary was built from `bb4b5b7` plus one uncommitted change, `max_nodes = 1024`, later committed in
+    `ad63002`;
+  * other source edits made during the scans did not reach that binary;
+  * a 233-point recomputation from `ad63002` is supporting evidence, not a full regeneration;
 * `validation/results/near_critical_*.csv` and `near_critical_summary.json`, from `validation/near_critical.py`
   and `validation/analyze_near_critical.py`.
 
@@ -206,10 +208,25 @@ After the fallback, the controlled `cw1` scan contains **no unresolved points**:
 |---|---|---|---|---|
 | points | 5117 | 7130 | 3555 | 459 = 177 + 282 |
 
-**Classification of the plateau points.** All 459 have $S_{\rm FL}\ge1301$. For $\Lambda_B\le M_{\rm Pl}$, $\wp<1$
-whenever $S>S_{\rm crit}=\ln0.15+4\ln(M_{\rm Pl}/H_0)=559.3$. Since $S\ge S_{\rm FL}$ for every finite-action
-configuration, these points are **metastable by the rigorous lower bound alone**. Their lifetime is nevertheless
-set entirely by the treatment of the couplings above $M_{\rm Pl}$, so no SM prediction is made for them.
+**Classification of the plateau points.** All 459 have $S_{\rm FL}\ge1301$. The lower bound is a statement about
+*critical points*, not about arbitrary field configurations, on which the action is unbounded below (METHODOLOGY
+§6.2). It enters here as follows.
+
+* *Mathematical step (rigorous for the frozen-coupling potential).* For any configuration with $V_{\rm int}<0$,
+  the scale-maximised action satisfies $\max_aS(\phi_a)=T^2/(4|V_{\rm int}|)\ge S_{\rm FL}$, by the sharp Sobolev
+  inequality.
+* Every path from the false vacuum to a configuration with negative action crosses the Pohozaev manifold
+  $T+2V_{\rm int}=0$, where $S=T^2/(4|V_{\rm int}|)$. The mountain-pass barrier therefore satisfies
+  $S_{\rm barrier}\ge S_{\rm FL}$. For these points, the infimum approached by escaping bubbles,
+  $8\pi^2/(3|\lambda(M_{\rm Pl})|)$, is itself $\ge S_{\rm FL}$.
+* *Physical assumptions (not rigorous).* The semiclassical formula
+  $\wp=0.15\,\Lambda_B^4e^{-S}/H_0^4$ is used with the frozen-coupling potential and with $\Lambda_B\le M_{\rm Pl}$.
+  Then $\wp<1$ whenever $S>S_{\rm crit}=\ln0.15+4\ln(M_{\rm Pl}/H_0)=559.3$.
+
+Under these assumptions the 459 points are metastable, because $S_{\rm FL}\ge1301>S_{\rm crit}$. This conclusion
+depends on freezing the couplings above $M_{\rm Pl}$ and on the semiclassical, tree-level, non-gravitational
+treatment. Their lifetime is set entirely by the treatment above $M_{\rm Pl}$, so no SM prediction is made for
+them.
 
 ### 5.3 Near-critical behaviour
 
@@ -256,12 +273,87 @@ where $\min\lambda_P=0$:
   lines are free of Planck sensitivity: their minima lie at $10^{17.1}$–$10^{18.4}$ GeV.
 * **Unresolved points are genuine numerical failures.** For $q\lesssim0.05$, i.e. $\delta\lesssim4\times10^{-4}$
   GeV and $S\gtrsim5\times10^7$, neither the collocation solver (its Newton iteration does not converge to a bounce) nor
-  the shooting fallback converges. This regime is not Planck-sensitive. The points are metastable by the rigorous bound
-  ($S_{\rm FL}>1.1\times10^7\gg S_{\rm crit}$). Their actions are not quoted.
+  the shooting fallback converges. This regime is not Planck-sensitive. Under the semiclassical assumptions of
+  §5.2, the barrier bound $S_{\rm barrier}\ge S_{\rm FL}>1.1\times10^7\gg S_{\rm crit}$ makes them metastable.
+  Their actions are not quoted.
 * **Practical relevance.** Every point where an estimate errs by more than 1% has $S>3\times10^4$, in the
   scans as on the lines, where
   $\wp\sim e^{-S}$ is immaterial. At the central inputs of Buttazzo et al. ($M_t=173.34$ GeV, i.e.
   $\delta=2.2$ GeV at $M_h=125.15$ GeV) $q=258$, and $S_{\rm FL}$ is low by $7\times10^{-4}$.
+
+### 5.3a All approximations on identical selections
+
+Source: `validation/compare_approximations.py`, with output in `validation/results/approximation_comparison.json`
+and `.md`. This is post-processing of the committed datasets only; no solver is run. It is tested in
+`python/tests/test_approximation_comparison.py`, including a check that recomputation reproduces the committed
+output.
+
+* **Metric.** $e=(S_{\rm est}-S_{\rm num})/S_{\rm num}$. Medians and percentiles are empirical, without
+  interpolation. An infinite or undefined estimate at a solved point counts as $|e|=\infty$.
+* **Selection.** Within each dataset, every approximation is evaluated on the same points.
+  * *Scans:* standard tier, i.e. $\lambda''>0$, not Planck-sensitive, not reduced-accuracy. For `cw1`, 10,432 of
+    16,261 rows are included. The rest are 5,654 rows without a numerical action (stable, no finite bounce, or
+    collocation failure) plus 174 Planck-sensitive and 1 reduced-accuracy point. For `tree`, 11,194 are included.
+    For the exploratory scan, 1,699 of 10,100 are included.
+  * *Near-critical SM lines:* all 45 solved points of 68. This includes 1 Planck-sensitive point (`cw1`, 128,
+    $\delta=1.58$ GeV) and 4 reduced-accuracy points, among them the point at $q=0.044$ where $S_{\rm E1}$ has its
+    largest error. Its numerical uncertainty, $\delta S/S=7\times10^{-6}$, is negligible against that error. The
+    other 23 points are 15 without a finite bounce and 8 unresolved.
+  * *Model family:* all 17 points.
+
+  The full accounting is in the coverage table of `approximation_comparison.md`.
+* **Approximations.**
+  * $S_{\rm FL}$: rigorous lower bound.
+  * $S_{\rm E1}=S_{\rm FL}(1+\frac{13}{72q})$: Espinosa (2020) eq. (3.21); a non-bound approximation.
+  * $S_{\rm E2}$: adds Espinosa's second-order term ($c_2=-0.013644$); exact only for quadratic $\lambda$.
+  * $S_{\rm curv}=S_{\rm FL}/(1-\frac{13}{72q})$: resummed first order; not a bound.
+  * $S_{\rm CGM}$, $S_{\rm CGM2}$: variational upper estimates, conditional on CGM attainment.
+
+**Controlled scans, both prescriptions (21,626 points).** Median $|e|$ / max $|e|$:
+
+| region | points | $S_{\rm FL}$ | $S_{\rm E1}$ | $S_{\rm E2}$ | $S_{\rm curv}$ | $S_{\rm CGM}$ |
+|---|---|---|---|---|---|---|
+| $q\ge10$ (bulk) | 21,481 | $3.8\times10^{-4}$ / 0.018 | $9.2\times10^{-6}$ / $2.9\times10^{-4}$ | $9.3\times10^{-6}$ / $4.2\times10^{-4}$ | $9.1\times10^{-6}$ / $1.0\times10^{-4}$ | $2.1\times10^{-7}$ / $4.7\times10^{-4}$ |
+| $1\le q<10$ | 118 | 0.025 / 0.144 | $3.0\times10^{-4}$ / $3.4\times10^{-3}$ | $5.7\times10^{-4}$ / $7.3\times10^{-3}$ | $3.4\times10^{-4}$ / 0.034 | $9.2\times10^{-4}$ / 0.039 |
+| $0.1\le q<1$ (near-critical) | 27 | 0.226 / 0.504 | $8.5\times10^{-3}$ / **0.0154** | 0.021 / 0.212 | 0.110 / $\infty$ (1 point; largest finite 0.421) | 0.121 / $\infty$ (1 point; largest finite 0.459) |
+| all | 21,626 | $3.9\times10^{-4}$ / 0.504 | $9.2\times10^{-6}$ / **0.0154** | $9.3\times10^{-6}$ / 0.212 | $9.1\times10^{-6}$ / $\infty$ | $2.1\times10^{-7}$ / $\infty$ |
+
+Where the maxima occur:
+
+* $S_{\rm E1}$: $+1.54\%$ at $(M_h,M_t)=(124.1,170.6)$ GeV, `cw1`, $q=0.338$, $S=2.6\times10^6$. The `tree` maximum is
+  $+1.41\%$ at $q=0.173$.
+* $S_{\rm FL}$: $-50.4\%$ at $(120.1,168.5)$ GeV, `tree`, $q=0.173$. $S_{\rm curv}$ and $S_{\rm CGM}$ are infinite at
+  that point.
+* The signed error of $S_{\rm E1}$ lies in $[-3.7\times10^{-4},+1.54\%]$.
+
+**Other datasets** (same metric):
+
+* *Exploratory scan* (1,699 standard-tier points, $q\ge2.9$): max $|e|$ is 6.0% ($S_{\rm FL}$), 0.23% ($S_{\rm E1}$),
+  0.37% ($S_{\rm E2}$), 0.28% ($S_{\rm curv}$) and 0.57% ($S_{\rm CGM}$). The medians are $5.0\times10^{-4}$,
+  $2.3\times10^{-5}$, $2.3\times10^{-5}$, $2.3\times10^{-5}$ and $3.6\times10^{-7}$.
+* *SM near-critical lines* (45 solved points):
+  * $0.1\le q<1$: max $|e|$ is 52% ($S_{\rm FL}$), 1.7% ($S_{\rm E1}$), 24% ($S_{\rm E2}$), $\infty$ ($S_{\rm curv}$,
+    $S_{\rm CGM}$) and 56% ($S_{\rm CGM2}$).
+  * $q<0.1$ (4 points): max $|e|$ is 83% ($S_{\rm FL}$), 14.9% ($S_{\rm E1}$, at $q=0.044$) and 133% ($S_{\rm E2}$).
+    The variational estimates are infinite there, except $S_{\rm CGM2}$ at $q=0.097$ ($131\times$ too large).
+* *Parabolic model* (17 points): for $0.1\le q<1$, max $|e|$ is 2.65% for $S_{\rm E1}$ (at $q=0.2$), 49% for
+  $S_{\rm E2}$, $\infty$ for $S_{\rm curv}=S_{\rm CGM}$ and 712% for $S_{\rm CGM2}$. For $q<0.1$, $S_{\rm E1}$ reaches
+  10.2% (at $q=0.05$).
+
+**Findings.**
+
+1. In the bulk, $S_{\rm CGM}$ has the smallest typical error, a median of $2\times10^{-7}$. That is about 40 times
+   below the formulas that use only $\lambda''$ ($S_{\rm E1}$, $S_{\rm E2}$, $S_{\rm curv}$; about $10^{-5}$),
+   whose residual comes from the cubic and higher terms of $\lambda(\ln\phi)$. $S_{\rm curv}$ has the smallest
+   bulk maximum ($1.0\times10^{-4}$).
+2. Near criticality, the unresummed first-order formula is by far the most accurate closed form: at most 1.54% on
+   the scans, 1.7% on the SM lines for $q\ge0.097$, and 2.65% on the model for $q\ge0.1$. The resummed and
+   variational estimates diverge there (METHODOLOGY §6.6a).
+3. No estimate is uniformly best, and the accuracy of $S_{\rm E1}$ at $q\lesssim1$ is empirical, outside its
+   formal domain. Below $q\approx0.07$ it degrades (−4% at $q=0.07$, −10% at 0.05 and −15% at the SM point
+   $q=0.044$). The deep thin-wall regime $q\lesssim0.05$ is beyond both the formulas and the solvers.
+4. These numbers come from three different domains that should not be merged: the SM scans ($q\ge0.17$), the SM
+   lines ($q\ge0.044$) and the idealised parabolic model ($q\ge0.05$).
 
 ### 5.4 Exploratory wide scan (not validated)
 
@@ -361,7 +453,7 @@ These are kept separate. Only the first is an uncertainty *of this code*.
 | kind | source | size | where |
 |---|---|---|---|
 | **numerical** | discretisation, round-off, domain, quadrature, input representation | $\sim10^{-14}$ relative (generic), $\sim10^{-12}$ (near criticality); per-point $\delta S\le1.1\times10^{-9}$ (standard tier); $\sim10^{-6}$ (reduced tier, Planck kink); shooting fallback $\le5.3\times10^{-10}$ | §4, §5.1–5.2 |
-| **approximation** (closed-form vs numerical) | $S_{\rm FL}$, $S_{\rm curv}$, $S_{\rm CGM}$, $S_{\rm CGM2}$ | $3\times10^{-4}$–$2\times10^{-3}$ for $S_{\rm FL}$ in the bulk ($S<5000$); unbounded for the upper estimates near criticality | METHODOLOGY §6.6a, §5.3 |
+| **approximation** (closed-form vs numerical) | $S_{\rm FL}$, $S_{\rm E1}$, $S_{\rm E2}$, $S_{\rm curv}$, $S_{\rm CGM}$, $S_{\rm CGM2}$ | $3\times10^{-4}$–$2\times10^{-3}$ for $S_{\rm FL}$ in the bulk ($S<5000$); $\le1.54\%$ for $S_{\rm E1}$ over all standard-tier scan points; unbounded for the resummed and variational estimates near criticality | METHODOLOGY §6.5a, §6.6a; §5.3a |
 | **parametric (physical inputs)** | $M_t$, $\alpha_s$, $M_h$ | not propagated here; the stability boundary moves by $\partial M_t^{\rm crit}/\partial M_h\approx0.5$ (from $M_t^{\rm crit}$ = 168.50, 171.12, 172.51 GeV at $M_h$ = 120, 125.15, 128) | §5.3 |
 | **theoretical (RG improvement)** | prescription `cw1` vs `tree`; bounce scale $\Lambda_B=\arg\min\lambda$ vs $1/R$; omitted one-loop determinant, two-loop $\lambda_{\rm eff}$, $e^{4\Gamma}$ | 2.6–5% of $S$ (prescription); median 7.3 units in the decay threshold (scale); the determinant is not computed | §5.1, README §10.3 |
 | **model (Planck scale)** | couplings frozen above $M_{\rm Pl}$; no gravity, no higher-dimensional operators | decisive for 459 `cw1` points (no finite bounce) and the 78 Planck-sensitive fallback bounces | §5.2 |

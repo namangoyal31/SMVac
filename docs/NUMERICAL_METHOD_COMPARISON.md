@@ -60,7 +60,15 @@ structurally different methods: two shooting formulations and global spectral co
 | B5 SM cw1 (60.0,150.0) | 427.296721416 | 1e-11 | 2e-05 / 0.1s | 2e-12 / 23.5s | 8e-12 / 13.6s | fail | 0 / 2.0s |
 | B5 SM cw1 (100.0,190.0) | 148.810359051 | 9e-12 | 4e-07 / 0.1s | 0 / 28.4s | 5e-12 / 14.4s | 5e-12 / 1.6s | 5e-12 / 1.6s |
 
-**Table 2 — analytical estimates against the consensus.** S_FL is the rigorous lower bound, S_curv the curvature-corrected approximation, and S_CGM the variational upper estimate (FL trial).
+**Table 2 — analytical estimates against the consensus.** The estimates are:
+
+* S_FL, the rigorous lower bound (method of Wipf 1985);
+* S_curv, the resummed form $S_{\rm FL}/(1-\frac{13}{72q})$ of the first-order result of Espinosa (2020);
+* S_CGM, the variational upper estimate with Fubini trial, the resummed Fubini-weighted average of the same work.
+
+The unresummed first-order formula $S_{\rm FL}(1+\frac{13}{72q})$ (Espinosa 2020, eq. 3.21) is not in this
+table. Its systematic comparison over all datasets is in `validation/results/approximation_comparison.md`
+(docs/VALIDATION_REPORT.md §5.3).
 
 | case | q = λ_min/λ″ (abs.) | (S−S_FL)/S | (S_curv−S)/S | (S_CGM−S)/S |
 |---|---|---|---|---|

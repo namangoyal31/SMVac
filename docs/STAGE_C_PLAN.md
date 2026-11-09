@@ -6,6 +6,15 @@ records the decisions and the proposed method comparison *before* implementation
 for the final choices is collected in `docs/NUMERICAL_METHOD_COMPARISON.md` and
 `docs/VALIDATION_REPORT.md`.
 
+> **Correction (final stage).** This record is kept as written, including the labels "(new)" on
+> $S_{\rm curv}$ and $S_{\rm CGM}$ in §3. Those labels are wrong:
+> * the lower-bound method is due to Wipf (1985);
+> * $S_{\rm curv}$ and $S_{\rm CGM}$ are resummed forms of the first-order Fubini-weighted result of Espinosa (2020),
+>   whose eq. (3.21) contains the $13/72$ coefficient.
+>
+> See `docs/SCIENTIFIC_METHODOLOGY.md` §6.5a and `docs/INDEPENDENT_SCIENTIFIC_REVIEW.md`. The commit hash
+> `f3d2e25` above is now `6b7ae5a`, after a message-only rewrite with an identical tree.
+
 ---
 
 ## 1. Central scientific question
