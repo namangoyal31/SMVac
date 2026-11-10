@@ -1,0 +1,137 @@
+{
+ "full_plane_cw1": {
+  "points": 250500,
+  "step_GeV": 0.5,
+  "status": {
+   "stable": 94283,
+   "non-perturbative": 86183,
+   "unstable": 31414,
+   "no-bounce": 20361,
+   "metastable": 13726,
+   "invalid-input": 4509,
+   "metastable-bound": 23,
+   "solver-failure": 1
+  },
+  "solver_failures": 754,
+  "decided_by_shooting_fallback": 730,
+  "decided_by_action_bound": 23,
+  "unresolved_Mh_Mt": [
+   [
+    154.0,
+    213.0
+   ]
+  ],
+  "bounce_points": 45140,
+  "class_differs_S_FL_literature_scale": 122,
+  "class_differs_S_FL_bounce_scale": 4,
+  "S_FL_error_above_1pct_only_for_S_from": 5574.00707791804,
+  "S_FL_error_above_10pct_only_for_S_from": 54006.62854431279,
+  "log10_p_max_where_S_FL_error_above_1pct": -2240.719392,
+  "S_FL_error_max_for_450_S_650": 0.0009458123033976307
+ },
+ "closeup_cw1": {
+  "points": 301101,
+  "step_GeV": 0.05,
+  "status": {
+   "stable": 132697,
+   "unstable": 75345,
+   "metastable": 68674,
+   "no-bounce": 24369,
+   "solver-failure": 9,
+   "metastable-bound": 7
+  },
+  "solver_failures": 4433,
+  "decided_by_shooting_fallback": 4417,
+  "decided_by_action_bound": 7,
+  "unresolved_Mh_Mt": [
+   [
+    130.95,
+    177.65
+   ],
+   [
+    131.3,
+    178.05
+   ],
+   [
+    132.4,
+    179.25
+   ],
+   [
+    132.45,
+    179.3
+   ],
+   [
+    134.5,
+    181.35
+   ],
+   [
+    134.55,
+    181.4
+   ],
+   [
+    135.4,
+    182.2
+   ],
+   [
+    136.05,
+    182.8
+   ],
+   [
+    137.45,
+    184.05
+   ]
+  ],
+  "bounce_points": 144019,
+  "class_differs_S_FL_literature_scale": 1004,
+  "class_differs_S_FL_bounce_scale": 21,
+  "S_FL_error_above_1pct_only_for_S_from": 28287.3335315629,
+  "S_FL_error_above_10pct_only_for_S_from": 376926.404134425,
+  "log10_p_max_where_S_FL_error_above_1pct": -12062.74537,
+  "S_FL_error_max_for_450_S_650": 0.0004205995925677941
+ },
+ "measured": {
+  "scan": "close-up scan",
+  "Mh": 125.13,
+  "Mt": 172.6,
+  "S_num": 2778.199171381747,
+  "log10_p_num": -971.4262113999978,
+  "log10_Lambda_I_GeV": 11.542675915999993,
+  "1sigma_region": {
+   "grid_points": 86,
+   "status": {
+    "metastable": 86
+   },
+   "S_num_range": [
+    2169.38775635041,
+    3839.5868179166
+   ],
+   "log10_p_num_range": [
+    -1432.44011,
+    -707.0634364
+   ]
+  },
+  "2sigma_region": {
+   "grid_points": 229,
+   "status": {
+    "metastable": 229
+   },
+   "S_num_range": [
+    1915.01144726094,
+    5003.46341732622
+   ],
+   "log10_p_num_range": [
+    -1938.022277,
+    -596.6314439
+   ]
+  }
+ },
+ "boundaries_at_Mh_125.2": {
+  "scan": "close-up scan",
+  "lambda_min_zero_Mt": [
+   171.1441
+  ],
+  "p_one_Mt": [
+   178.6041
+  ]
+ }
+}

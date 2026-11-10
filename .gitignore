@@ -72,3 +72,5 @@ build_configure.log
 results/controlled_cw1.csv
 results/controlled_tree.csv
 results/exploratory_cw1.csv
+results/full_plane_cw1.csv
+results/closeup_cw1.csv

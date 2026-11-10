@@ -33,11 +33,13 @@ class Inputs:
 
 def matching(inp: Inputs) -> tuple:
     """MS-bar couplings at mu = M_t."""
-    if inp.matching == "buttazzo2013":   # eqs. (55), (57)-(60)
+    if inp.matching in ("buttazzo2013", "extended"):   # eqs. (55), (57)-(60)
         das = (inp.alpha3 - 0.1184) / 0.0007
         dmw = (inp.MW - 80.384) / 0.014
         dt, dh = inp.Mt - 173.34, inp.Mh - 125.15
         lam = 0.12604 + 0.00206 * dh - 0.00004 * dt
+        if inp.matching == "extended":   # tree-level M_h^2/(2 v^2) shape, same central value (src/matching.cpp)
+            lam = inp.Mh ** 2 / (2 * V_EW ** 2) + (0.12604 - 125.15 ** 2 / (2 * V_EW ** 2)) - 0.00004 * dt
         yt = 0.93690 + 0.00556 * dt - 0.00042 * das
         g3 = 1.1666 + 0.00314 * das - 0.00046 * dt
         g2 = 0.64779 + 0.00004 * dt + 0.00011 * dmw

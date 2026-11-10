@@ -1,0 +1,16 @@
+# CLOSE-UP scan over [110, 140] x [160, 185] GeV at 0.05 GeV (the window of the original close-up figures) for
+# validation/make_phase_diagrams.py. Same physics as full_plane.toml, so the close-up is a zoom of the full plane; the
+# controlled region [120, 130] x [166, 182] (configs/controlled.toml) uses the Buttazzo et al. (2013) matching.
+[grid]
+mh = [110.0, 140.0, 0.05]
+mt = [160.0, 185.0, 0.05]
+
+[physics]
+prescription = "cw1"
+matching = "extended"
+alpha3 = 0.1184
+h0 = 67.4
+
+[output]
+path = "results/closeup_cw1.csv"
+label = "close-up [110,140]x[160,185] GeV at 0.05 GeV"

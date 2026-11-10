@@ -14,9 +14,11 @@ abstract: >-
   reference (spectral collocation). The reference is used to test established analytical approximations: the
   Fubini-Lipatov formula (a rigorous lower bound), the first- and second-order running corrections of Espinosa
   (2020), and resummed and variational estimates. The test includes their breakdown near the absolute-stability
-  boundary. The work does not compute the one-loop decay rate.
+  boundary. Phase diagrams of the (M_h, M_t) plane from the numerical bounce show the measured masses with their
+  1 sigma and 2 sigma regions. The work does not compute the one-loop decay rate.
 keywords:
   - vacuum stability
+  - phase diagram
   - Higgs boson
   - renormalization group
   - bounce action
