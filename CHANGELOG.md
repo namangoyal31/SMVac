@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] — phase-diagrams branch
+
+### Phase diagrams of the $(M_h,M_t)$ plane
+- **New scans** (`configs/full_plane.toml`, `configs/closeup.toml`): the full $[0,250]^2$ GeV plane at 0.5 GeV
+  (250,500 points) and the close-up $[110,140]\times[160,185]$ GeV at 0.05 GeV (301,101 points), prescription
+  `cw1`, `extended` matching. The scan outputs are not committed (36 and 55 MB); their shooting-fallback results
+  are.
+- **Python reference:** the `extended` matching of `src/matching.cpp` is added to
+  `python/smvac/reference/sm.py`, so that the shooting fallback can re-solve points of these scans.
+- **Figures** (`validation/make_phase_diagrams.py`, captions in `figures/README.md`): the full plane with action
+  contours, with the instability scale, and with a magnified inset; the close-up with and without action contours;
+  the controlled region with the instability scale; analytical-versus-numerical overlays; maps of the error of the
+  analytical action. Every panel shows the PDG 2026 masses with their joint $1\sigma$ and $2\sigma$ regions.
+  - Solver failures are re-solved by the shooting fallback. Where it does not converge, the rigorous bound
+    $S\ge8\pi^2/(3|\lambda_{\min}|)$ classifies a point as metastable if the bound alone gives $\wp<1$ for every
+    bounce scale up to $M_{\rm Pl}$ (hatched). 10 of 5,187 failures remain unresolved.
+  - Contour labels are kept clear of the measured point and its $\sigma$ regions.
+  - The numbers quoted in README §10.7 are written to `results/phase_diagrams_summary.json`.
+- **README:** the full-plane phase diagram with action contours is the main figure; new §10.7.
+
 ## [2.0.0-dev] — formalization branch (unreleased)
 
 ### Final scientific corrections (after the independent review)

@@ -374,6 +374,28 @@ Its statuses:
 followed up. The matching fits are used far outside their domain, so the scan is an uncontrolled extrapolation
 (`figures/exploratory_wide_scan.png`).
 
+### 5.5 Phase-diagram scans (full plane and close-up)
+
+The phase diagrams (README §10.7) use two further `cw1` scans with the extended matching: the full $[0,250]^2$ GeV
+plane at 0.5 GeV (250,500 points) and the close-up $[110,140]\times[160,185]$ GeV at 0.05 GeV (301,101 points). The
+scan outputs are not committed; their fallback results and `results/phase_diagrams_summary.json` are.
+
+* **Agreement with the controlled scan.** At $M_h=125.2$ GeV the close-up gives $\lambda_{\min}=0$ at
+  $M_t=171.144$ GeV and $\wp=1$ at 178.604 GeV. These are the controlled-scan values (README §10) to the quoted
+  1 MeV.
+* **Internal consistency.** The two scans give the same status at all 3,111 shared grid points, after the
+  fallback and the action bound.
+* **Recomputation.** A seeded, stratified sample, drawn as in `validation/reproduce_sample.py`, matched the stored
+  values: 192 scan points recomputed from the clean build of `ad63002` at $10^{-12}$, and 16 fallback points
+  re-solved (status, and $S$ at $10^{-10}$).
+* **Solver failures.** Of 754 (full plane) and 4,433 (close-up) collocation failures, the shooting fallback decides
+  730 and 4,417 with the acceptance criteria of §5.2. The action bound decides 23 and 7 more: a point with
+  $\lambda_{\min}<0$ whose variational optimum lies at finite field is metastable if $S_{\rm FL}>559.3$, since then
+  $\wp<1$ for every bounce scale up to $M_{\rm Pl}$. Ten points remain unresolved, all with the minimum of
+  $\lambda$ at $10^{18.8}$–$10^{18.9}$ GeV.
+* **Not validated.** Outside the controlled window the matching is extrapolated, as for the exploratory scan
+  (§5.4).
+
 ## 6. Comparison with the legacy implementation
 
 ### 6.1 Why the legacy construction fails (precise mechanism)
@@ -435,7 +457,8 @@ The legacy outputs are preserved unchanged in `legacy/data/` and must not be use
   one-loop determinant is not computed.
 * **Two-loop $\lambda_{\rm eff}$ and $e^{4\Gamma}$** are not implemented, so the absolute-stability boundary is not
   compared with Buttazzo et al. eq. (64) at their precision.
-* **Inputs outside the controlled window** (the exploratory scan) are not validated by construction.
+* **Inputs outside the controlled window** (the exploratory scan, and the phase diagrams beyond that window,
+  §5.5) are not validated by construction.
 * **Points flagged Planck-sensitive** depend on the arbitrary freezing of the couplings above $M_{\rm Pl}$. Their
   numerical solutions are accurate for that model, but the model itself is not physics. This includes the 459
   `cw1` points without a finite bounce.
