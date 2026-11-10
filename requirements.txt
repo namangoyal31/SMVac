@@ -1,3 +1,7 @@
-pandas
-numpy
-matplotlib
+# Python dependencies for orchestration, plotting and the independent reference implementations.
+# The committed results were produced with Python 3.14.6, numpy 2.5.1, scipy 1.18.0, pandas 3.0.6 and
+# matplotlib 3.11.1; the minimum versions below are expected to work but were not all tested.
+numpy>=1.26
+scipy>=1.11
+pandas>=2.0
+matplotlib>=3.8
