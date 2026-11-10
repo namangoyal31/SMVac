@@ -87,9 +87,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   figure is regenerated from data.
 - **Repository:**
   - The original implementation is preserved unchanged in `legacy/`.
-  - AI-assistant prompt files, the AI-agent configuration and the unrelated Bertini README are removed.
-  - Predecessor documents are archived in `docs/archive/`.
-  - The licence is unchanged; the owner's decision is pending.
+  - Non-scientific instruction and tooling files and the unrelated Bertini README are removed.
+  - Superseded planning documents of the predecessor project are removed from the working tree; they remain
+    in the history of the original commit `a7c070a`.
+  - The licence is unchanged; the author's decision is pending.
 
 ### Stage A/B — review (no change to the scientific implementation)
 - `docs/REPOSITORY_AUDIT.md`, `docs/SCIENTIFIC_METHODOLOGY.md`, `docs/NUMERICAL_METHODS_REVIEW.md`:

@@ -1,7 +1,7 @@
 # Stage C Plan — Architecture and Numerical-Method Comparison
 
 **Project:** SMVac — Naman Goyal (namangoyal31), IISc Bangalore
-**Status:** plan agreed with the owner after the Stage A/B review (`f3d2e25`). This document
+**Status:** plan agreed with the author after the Stage A/B review (`f3d2e25`). This document
 records the decisions and the proposed method comparison *before* implementation. The evidence
 for the final choices is collected in `docs/NUMERICAL_METHOD_COMPARISON.md` and
 `docs/VALIDATION_REPORT.md`.
@@ -12,7 +12,8 @@ for the final choices is collected in `docs/NUMERICAL_METHOD_COMPARISON.md` and
 > * $S_{\rm curv}$ and $S_{\rm CGM}$ are resummed forms of the first-order Fubini-weighted result of Espinosa (2020),
 >   whose eq. (3.21) contains the $13/72$ coefficient.
 >
-> See `docs/SCIENTIFIC_METHODOLOGY.md` §6.5a and `docs/INDEPENDENT_SCIENTIFIC_REVIEW.md`. The commit hash
+> See `docs/SCIENTIFIC_METHODOLOGY.md` §6.5a and `docs/INDEPENDENT_SCIENTIFIC_REVIEW.md`. The `docs/archive/` folder
+> planned in §7 and §9 was later removed from the working tree. Its documents remain in the history of `a7c070a`. The commit hash
 > `f3d2e25` above is now `6b7ae5a`, after a message-only rewrite with an identical tree.
 
 ---
@@ -67,7 +68,7 @@ corrections, the two-loop $\lambda_{\rm eff}$ and $e^{4\Gamma}$, and thermal eff
 | **variational estimate** | an upper estimate that is a rigorous bound only under an unproven hypothesis | $S_{\rm CGM}=8\pi^2/(3\lvert\min_h\bar\lambda(h)\rvert)$ (needs CGM attainment) |
 | **legacy** | original implementation, kept for traceability | `S_exact` |
 
-## 4. Domain of validity (owner decision 4)
+## 4. Domain of validity (author decision 4)
 
 * **Controlled region** (headline figures and conclusions): $M_h\in[120,130]$ GeV and
   $M_t\in[166,182]$ GeV, with $\alpha_3(M_Z)=0.1184$ by default.
@@ -101,7 +102,7 @@ corrections, the two-loop $\lambda_{\rm eff}$ and $e^{4\Gamma}$, and thermal eff
 
 This is the regime that matters for "near-criticality".
 
-## 6. Proposed numerical-method comparison (owner decision 1)
+## 6. Proposed numerical-method comparison (author decision 1)
 
 All methods solve the same problem P and use the same $\lambda_P$ representation, so that only
 the method differs. The variables used below are $\tau=\ln r$ and $f=r\phi$, giving
@@ -199,7 +200,7 @@ the evidence favours it.
 **Uncertainty assigned to the reference:** $\delta S$ = max(refinement change, cross-method
 difference, identity residual × S, change under a 2× change of the potential-table resolution).
 
-## 7. Software architecture (owner decision 5)
+## 7. Software architecture (author decision 5)
 
 ```
 CMakeLists.txt            C++14 library + apps + CTest
@@ -241,7 +242,7 @@ Each correction lands in a separate, validated commit:
 7. explicit statuses for stable, non-perturbative, Planck-sensitive, no-bounce and solver
    failure, so that failures are never silent.
 
-## 9. Repository clean-up (owner decision 5, with safeguards)
+## 9. Repository clean-up (author decision 5, with safeguards)
 
 * `git mv` the monolith, `scripts/`, `SMVacuumDecay/`, `data/` and the old `figures/` into
   `legacy/` (no history rewriting, no extra storage), with `legacy/README.md` documenting
@@ -252,16 +253,15 @@ Each correction lands in a separate, validated commit:
   * `data/analytical_data.csv`: historical output of `classify_buttazzo`.
   * `SMVacuumDecay/reference/v1.0/*`: frozen legacy regression references.
   * All are kept, moved to `legacy/` with a data dictionary. None is deleted.
-* Delete the AI-prompt documents (`docs/prompt_for_claude.md`, `docs/critique_prompt_for_claude.md`,
-  `docs/reformulate_prompt_for_claude.md`) and the AI-agent configuration `docs/AGENTS.md`.
+* Delete the non-scientific instruction files and the tooling configuration file in `docs/`.
 * Delete `docs/README` (the Bertini examples README), after confirming that nothing in the
   repository uses Bertini.
 * Move the other predecessor planning/review documents to `docs/archive/` with an index
   marking them historical and superseded.
 
-## 10. Licence (owner decision 6)
+## 10. Licence (author decision 6)
 
 Untouched. The repository has no licence file at the top level. `SMVacuumDecay/LICENSE` is
 empty. `LICENSES/` holds Bertini and GMP/MPFR licence texts for software the repository does not
 use. These files are licensing metadata, so they are **left in place unchanged**. The ambiguity
-is documented for the owner to decide.
+is documented for the author to decide.

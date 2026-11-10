@@ -15,8 +15,8 @@ physics and numerics are reviewed in `docs/SCIENTIFIC_METHODOLOGY.md` and
 scripts in `audit/` (see `audit/README.md`).
 
 > **Paths** in this audit refer to the audited revision `a7c070a`. After the clean-up (commit `bb4b5b7`), the
-> original code, data, figures and scripts are in `legacy/` and the working notes in `docs/archive/`. The AI-prompt
-> files and `docs/AGENTS.md` were removed; they remain in the git history. The licence situation described in §7
+> original code, data, figures and scripts are in `legacy/`. The working notes and the non-scientific
+> instruction files in `docs/` were removed; they remain in the history of `a7c070a`. The licence situation described in §7
 > is unchanged.
 
 ---
@@ -92,7 +92,7 @@ verification, is in `docs/SCIENTIFIC_METHODOLOGY.md`.
   **scipy**, which is missing. No versions are pinned.
 * **CI** (`.github/workflows/ci.yml`) compiles the monolith and runs two 10-point smoke tests at
   $M_t=0$, which are all status 4. It never builds or runs the `SMVacuumDecay` tests. Per the
-  owner, GitHub Actions is currently unavailable.
+  author, GitHub Actions is currently unavailable.
 * External libraries: none. Licences for Bertini and GMP/MPFR are present, but neither is used.
 
 ## 5. Existing results and their provenance
@@ -172,16 +172,14 @@ $10^{-12}$ tolerances pass only on the reference platform and points.
   * paper planning and figure planning;
   * mock referee audits and a rebuttal;
   * error-analysis claims;
-  * three prompts written for an AI assistant (`prompt_for_claude.md`,
-    `critique_prompt_for_claude.md`, `reformulate_prompt_for_claude.md`) and an agent
-    configuration (`AGENTS.md`);
+  * three instruction files and a tooling configuration file unrelated to the physics;
   * a 12,319-line file inventory of the predecessor repository;
   * `docs/README`, which is the README of the unrelated *Bertini* package.
 * Several docs already diagnose parts of the problem: `SOLVER_VERIFICATION.md` states that no
   bounce ODE is solved, and `SANDWICH_ANALYSIS.md` states that the negative actions are an ansatz
   breakdown. These conclusions were never propagated to the code, tests, README or figures.
 * **Licence:** the repository has **no licence**; `SMVacuumDecay/LICENSE` is empty. No licence
-  should be added without the owner's decision.
+  should be added without the author's decision.
 * **Citation metadata:** the top-level `CITATION.cff` is reasonable.
   `SMVacuumDecay/CITATION.cff` has a placeholder URL.
 
@@ -198,7 +196,7 @@ See METHODOLOGY §0 and NUMERICAL REVIEW §9 for details and evidence.
 1. `S_exact` is not a bounce action. It is unsound, with negative values and sentinels classified
    as metastable. **This is fundamental to the headline result.**
 2. A $\phi^6/(6M_{\rm Pl}^2)$ operator is added in the `S_exact` integrand only. It is not
-   documented in the README or code; the predecessor project's notes (`docs/AGENTS.md`) list it
+   documented in the README or code; the predecessor project's notes list it
    as a deliberate paper topic (the "c₆ operator"). That file also gives
    $T_U=4.3\times10^{17}$ s, whereas the code uses $3.15\times10^{17}$ s.
 3. The metastability threshold uses the wrong scale and time (45–65 units too low).
@@ -210,5 +208,5 @@ See METHODOLOGY §0 and NUMERICAL REVIEW §9 for details and evidence.
 9. Plot-level data manipulation; a contour placed on an artefact.
 10. Tests are regression-only and enshrine wrong values; there is no build system; CI does not
     run the tests.
-11. Duplicated code trees; magic numbers; `CLAUDE_M_PLANCK` naming; failure modes are silent.
-12. Documentation over-claims; AI-prompt and third-party files in `docs/`; no licence.
+11. Duplicated code trees; magic numbers; inconsistent constant naming; failure modes are silent.
+12. Documentation over-claims; non-scientific and third-party files in `docs/`; no licence.

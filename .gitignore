@@ -72,5 +72,3 @@ build_configure.log
 results/controlled_cw1.csv
 results/controlled_tree.csv
 results/exploratory_cw1.csv
-# Local tool configuration
-.claude/

@@ -63,7 +63,7 @@ known methods.** The literature search for this review found:
   use of trial functions in the inf-max characterisation to obtain upper bounds is Wipf (1985).
 
 The **finiteness criterion** $q>\tfrac12{\rm Var}(\ln g)$ and the two-parameter threshold $3/32$ are correct.
-This review proves them rigorously, with a closed form, in §2.3. I did not find them in the literature, but they
+This review proves them rigorously, with a closed form, in §2.3. They were not found in the literature, but they
 are elementary and of limited scope.
 
 The review also contains a **finding that changes one of the project's main conclusions**. The plain,
@@ -251,7 +251,7 @@ The physics caveat remains: $\Lambda_B\le M_{\rm Pl}$ and the frozen-coupling mo
   exceeds it. The sharp-Sobolev argument gives the stronger constant $8\pi^2/3$ for exactly this class.
 * Di Luzio et al. (2016) note that $8\pi^2/(3|\lambda(1/R_{\rm SM})|)$ "provides a lower bound" (heuristically,
   by expanding about the minimum).
-* I did not find the sharp statement written explicitly. It should be presented as an immediate application of
+* The sharp statement was not found written explicitly. It should be presented as an immediate application of
   known tools, not as a new theorem.
 
 ### 2.2 The thick-wall formula $S/S_{\rm FL}-1\sim13/(72q)$
@@ -354,7 +354,7 @@ corollary of Espinosa's eq. (3.5), the same constraint, and Derrick's identity. 
 **Significance [I].** For the FL family, the criterion simply locates the pole of the resummed first-order
 formula, which is evident from $S_{\rm FL}/(1-13/(72q))$. Its general form, finiteness iff the trial's
 log-field spread is below $2q$, is a clean and correct way to explain why *any* fixed-shape or Fubini-tailed
-family must fail. The $3/32$ result belongs to an ad hoc family. I did not find the criterion in the physics
+family must fail. The $3/32$ result belongs to an ad hoc family. The criterion was not found in the physics
 literature reviewed (§4). Given its elementary nature, a prior appearance in some form cannot be excluded.
 
 ### 2.4 Assessment of the "improved estimates"
@@ -505,7 +505,7 @@ sampled, not surveyed.
 **On the 13/72 and 3/32 results [E/I].**
 
 * $13/72$ exists in equivalent form: Espinosa 2020, eq. 3.21.
-* I found no occurrence of the general finiteness criterion $q>\frac12{\rm Var}(\ln g)$, of the closed form
+* No occurrence was found of the general finiteness criterion $q>\frac12{\rm Var}(\ln g)$, of the closed form
   $q_c(n)$, or of $3/32$. Searches combined the variational bounce estimate with trial-profile finiteness,
   thresholds and log-quadratic couplings.
 * Because these are elementary, the absence of a citation is weak evidence of novelty. A specialist check would
@@ -551,7 +551,7 @@ Ingredient by ingredient [E]:
   the agreement is within their quoted theoretical error.
 * At $M_h=125.15$ GeV, SMVac gives $M_t^{\rm crit}=171.12$ GeV (`cw1`). Buttazzo's eq. (66) quotes
   $171.53\pm0.42$ GeV, while linear inversion of their eq. (64) gives 171.1 GeV. Their two equations differ by
-  about 0.4 GeV at this point. I have not resolved this, so the comparison is inconclusive at the 0.4 GeV level.
+  about 0.4 GeV at this point. This was not resolved here, so the comparison is inconclusive at the 0.4 GeV level.
 * $\lambda$ at $M_{\rm Pl}$ reproduces eq. (61).
 
 **Which conclusions concern the analytical approximation [I].**

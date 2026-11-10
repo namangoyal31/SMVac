@@ -30,7 +30,7 @@ Companion documents: `docs/REPOSITORY_AUDIT.md` (inventory, provenance, testing)
 >
 > **Paths.** File names in §0–§5 refer to the audited revision `a7c070a`. In the current tree:
 > `apps/solver_numerical.cpp`, `SMVacuumDecay/`, `data/`, `figures/` and `scripts/` of that revision are in
-> `legacy/`; its working notes from `docs/` are in `docs/archive/`.
+> `legacy/`; its working notes from `docs/` remain in the history of `a7c070a`.
 
 ---
 
@@ -405,7 +405,7 @@ The second-order truncation is *worse* there, as expected of an asymptotic serie
 ### 6.6a Why the resummed and fixed-shape variational estimates fail near the stability boundary [derived, verified]
 
 *Scope.* The criterion below is an elementary lemma. It holds exactly for $\lambda$ quadratic in $\ln\phi$, an
-idealised model potential. In the SM the cubic terms shift the poles slightly. I did not find it in the
+idealised model potential. In the SM the cubic terms shift the poles slightly. It was not found in the
 literature reviewed (`docs/INDEPENDENT_SCIENTIFIC_REVIEW.md` §4), but given its simplicity no novelty is claimed.
 
 **A finiteness criterion for any fixed-shape estimate.** Take a trial $\phi=h\,g(r/R)$ of fixed shape $g$.

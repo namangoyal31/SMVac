@@ -215,7 +215,7 @@ figures/              generated figures, with captions in figures/README.md
 audit/                Stage A/B audit tooling (validated port of the legacy solver, experiments)
 legacy/               original implementation, scripts, data and figures (frozen)
 docs/                 audit, methodology, numerical review, design record, method comparison, validation report,
-                      archive/ (superseded documents of the original project)
+                      independent scientific review
 ```
 
 ## 7. Installation

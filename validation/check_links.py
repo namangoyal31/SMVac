@@ -1,15 +1,17 @@
 """Check relative links and file references in the active Markdown documentation.
 
-Scans README.md, CHANGELOG.md, CONTRIBUTING.md, docs/*.md, figures/README.md, legacy/README.md and audit/README.md
-(docs/archive/ is a frozen historical record and is not checked). Reports every Markdown link target, image and
-back-quoted repository path (e.g. `validation/results/x.csv`) that does not exist. Exit code 1 if anything is missing.
+Scans README.md, CHANGELOG.md, CONTRIBUTING.md, docs/*.md, figures/README.md, legacy/README.md and audit/README.md.
+Reports every Markdown link target, image and back-quoted repository path (e.g. `validation/results/x.csv`) that does
+not exist. Exit code 1 if anything is missing.
 Usage: python validation/check_links.py
 """
 from __future__ import annotations
 
+import fnmatch
 import glob
 import os
 import re
+import subprocess
 import sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -17,16 +19,33 @@ FILES = ["README.md", "CHANGELOG.md", "CONTRIBUTING.md", "figures/README.md", "l
 FILES += sorted(os.path.relpath(p, ROOT) for p in glob.glob(os.path.join(ROOT, "docs", "*.md")))
 LINK = re.compile(r"!?\[[^\]]*\]\(([^)\s]+)\)")
 CODE = re.compile(r"`([A-Za-z0-9_./\-*]+\.(?:md|py|cpp|hpp|csv|json|toml|txt|png|cff|yml|gz))`")
-# The Stage A/B review documents describe the audited revision a7c070a; files moved by the clean-up are resolved
-# through this map, and files deliberately removed (kept in git history) are listed as such, not as missing.
-RELOCATED = {"apps/": "legacy/apps/", "figures/": "legacy/figures/", "docs/": "docs/archive/", "data/": "legacy/data/",
+# The review documents of the original implementation describe the audited revision a7c070a. A path they cite is
+# accepted if it exists now, if it was moved to legacy/ by the clean-up, or if it existed in that revision (files
+# removed later remain in the git history).
+AUDITED_REVISION = "a7c070a"
+RELOCATED = {"apps/": "legacy/apps/", "figures/": "legacy/figures/", "data/": "legacy/data/",
              "scripts/": "legacy/scripts/", "SMVacuumDecay/": "legacy/SMVacuumDecay/"}
 HISTORICAL = {"REPOSITORY_AUDIT.md", "SCIENTIFIC_METHODOLOGY.md", "NUMERICAL_METHODS_REVIEW.md", "STAGE_C_PLAN.md",
               "README.md"}   # README.md here means legacy/README.md and audit/README.md (paths of the old layout)
-REMOVED = {"docs/AGENTS.md", "docs/prompt_for_claude.md", "docs/critique_prompt_for_claude.md",
-           "docs/reformulate_prompt_for_claude.md", "docs/README"}
 PREFIXES = ("docs/", "validation/", "results/", "figures/", "python/", "src/", "include/", "apps/", "tests/",
             "configs/", "legacy/", "audit/", ".github/")
+
+
+def audited_paths():
+    """Paths tracked in the audited revision (empty if git or the revision is unavailable)."""
+    try:
+        out = subprocess.run(["git", "ls-tree", "-r", "--name-only", AUDITED_REVISION], cwd=ROOT,
+                             capture_output=True, text=True, check=True).stdout
+        return set(out.split())
+    except (OSError, subprocess.CalledProcessError):
+        return set()
+
+
+AUDITED = audited_paths()
+
+
+def in_audited_revision(target):
+    return any(fnmatch.fnmatch(p, target) for p in AUDITED)
 
 
 def exists(base, target):
@@ -52,12 +71,13 @@ def main():
             if not exists(base, t):
                 missing.append((f, t))
         for t in CODE.findall(text):
-            if not t.startswith(PREFIXES) or exists(base, t) or t in REMOVED:
+            if not t.startswith(PREFIXES) or exists(base, t):
                 continue
-            moved = [t.replace(a, b, 1) for a, b in RELOCATED.items() if t.startswith(a)] \
-                if os.path.basename(f) in HISTORICAL else []
-            if not any(exists(ROOT, m) for m in moved):
-                missing.append((f, t))
+            if os.path.basename(f) in HISTORICAL:
+                moved = [t.replace(a, b, 1) for a, b in RELOCATED.items() if t.startswith(a)]
+                if any(exists(ROOT, m) for m in moved) or in_audited_revision(t):
+                    continue
+            missing.append((f, t))
     for f, t in missing:
         print(f"MISSING  {f}: {t}")
     print(f"checked {len(FILES)} files; {len(missing)} missing references")
